@@ -1,0 +1,21 @@
+query getFragments($filter: SearchFragmentInput) {
+  fragments(filter: $filter) {
+    uuid
+    handle
+    content
+    createdAt
+    tags
+
+    linkedBy {
+      uuid
+      handle
+      previewContent
+    }
+
+    linksTo {
+      handle
+      uuid
+      previewContent
+    }
+  }
+}

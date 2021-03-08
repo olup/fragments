@@ -1,0 +1,21 @@
+query getFragmentByHandle($handle: String!) {
+  fragmentByHandle(handle: $handle) {
+    uuid
+    handle
+    content
+    createdAt
+    tags
+
+    linkedBy {
+      uuid
+      handle
+      previewContent
+    }
+
+    linksTo {
+      handle
+      uuid
+      previewContent
+    }
+  }
+}

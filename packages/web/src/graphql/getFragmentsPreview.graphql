@@ -1,0 +1,7 @@
+query getFragmentsPreview($filter: SearchFragmentInput) {
+  fragments(filter: $filter) {
+    uuid
+    handle
+    previewContent
+  }
+}
