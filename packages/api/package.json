@@ -1,5 +1,5 @@
 {
-  "name": "@graphql-nexus/ghost-example-api",
+  "name": "api",
   "scripts": {
     "dev": "ts-node-dev --ignore-watch src/generated --no-notify --transpileOnly --respawn ./src",
     "build": "yarn tsc",
