@@ -1,4 +1,4 @@
-import { queryType, idArg, mutationType, arg, stringArg, nonNull, list } from '@nexus/schema'
+import { queryType, idArg, mutationType, arg, stringArg, nonNull, list } from 'nexus'
 import { result } from 'lodash'
 import mongoose from 'mongoose'
 import { nanoid } from 'nanoid'

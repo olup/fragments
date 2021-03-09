@@ -9,7 +9,7 @@ export const Main = styled.div`
   min-height: 100%;
   display: flex;
   justify-content: center;
-  background-color: #eee;
+  background-color: #e9e5dc;
 `;
 
 export const Body = styled.div`

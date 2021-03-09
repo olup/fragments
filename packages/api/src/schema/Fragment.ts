@@ -1,4 +1,4 @@
-import { inputObjectType, objectType } from '@nexus/schema'
+import { inputObjectType, objectType } from 'nexus'
 import { DbFragment } from '../db'
 
 export const Fragment = objectType({

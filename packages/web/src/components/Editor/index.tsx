@@ -130,7 +130,7 @@ export const Editor: FC<EditorProps> = ({
     onChangeParent?.(deserialize(editorContent));
 
     // fire save event
-    if (autoSave) debouncedSave.callback();
+    if (autoSave) debouncedSave();
   };
 
   // serialize live on first mount

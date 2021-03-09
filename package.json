@@ -1,12 +1,17 @@
 {
   "name": "fragments",
-  "private" : true,
+  "private": true,
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "workspaces":["packages/api", "packages/web"],
+  "workspaces": [
+    "packages/api",
+    "packages/web"
+  ],
   "scripts": {
-    "api" : "yarn workspace api",
-    "web" : "yarn workspace web"
+    "api": "yarn workspace api",
+    "web": "yarn workspace web",
+    "start": "concurrently \"yarn api dev\" \"yarn web start\""
+  },
+  "dependencies": {
+    "concurrently": "^6.0.0"
   }
 }

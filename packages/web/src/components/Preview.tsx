@@ -17,7 +17,7 @@ const PreviewStyled = styled.div`
     //border-radius: 5px;
     border: 1px solid #dfdfdf;
     background-color: white;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 4px 4px 0px 0px  rgba(0, 0, 0, 0.1);
     padding: 10px;
     font-size: 14px;
   }

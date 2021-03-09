@@ -17,7 +17,7 @@ const SideStyled = styled.div<{ isVisible?: boolean }>`
   width: ${(p) => (p.isVisible ? SIDE_WIDTH : 0)}px;
   box-sizing: border-box;
   overflow: hidden;
-  color: #aaa;
+  color: #e3d18a;
   transition: 0.5s;
 
   position: fixed;
@@ -30,7 +30,7 @@ const SideStyled = styled.div<{ isVisible?: boolean }>`
 `;
 
 const Inside = styled.div`
-  background-color: #222;
+  background-color: #85603f;
   width: ${SIDE_WIDTH}px;
   padding: 20px;
   padding-top: 50px;
@@ -43,7 +43,7 @@ const FixLink = styled.span`
   top: 10px;
   left: 20px;
   padding: 3px;
-  color: #aaa;
+  color: #e3d18a;
   cursor: pointer;
   &:hover {
     border-bottom: 1px dashed;
@@ -73,7 +73,7 @@ export const Side: FC = () => {
   const [search, setSearch] = useState("");
   const tagQuery = useGetTagsQuery();
   const tags = [...(tagQuery?.data?.tags || [])].sort();
-  const [debouncedSearch] = useDebounce(search, 1000);
+  const [debouncedSearch] = useDebounce(search, 300);
 
   const { data: fragmentsFoundResponse, loading } = useGetFragmentsPreviewQuery(
     {
@@ -111,7 +111,7 @@ export const Side: FC = () => {
             {isVisible ? "Hide" : "Show"} Side
           </FixLink>
 
-          <Link to="/handle/new" style={{ marginBottom: 20 }}>
+          <Link to="/handle/new" style={{ marginBottom: 20, display: "block" }}>
             <Button>
               <HiOutlinePlus size={15} /> New fragment
             </Button>
