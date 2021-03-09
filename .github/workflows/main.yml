@@ -26,3 +26,4 @@ jobs:
         with:
           git_remote_url: 'ssh://dokku@188.166.11.100:22/fragment'
           ssh_private_key: ${{ secrets.DOKKU_SECRET_KEY }}
+          git_push_flags: --force
