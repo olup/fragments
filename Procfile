@@ -1,1 +1,1 @@
-web: yarn api buildAndRun
+web: yarn api start
