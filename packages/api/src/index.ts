@@ -61,5 +61,5 @@ connect().then(() => {
   apolloServer.applyMiddleware({ app: app })
 
   app.listen(port)
-  console.log('server started on http://localhost:10000')
+  console.log(`server started on port ${port}`)
 })
