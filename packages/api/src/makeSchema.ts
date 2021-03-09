@@ -10,15 +10,12 @@ export const schema = makeSchema({
   },
   plugins: [fieldAuthorizePlugin()],
 
-  typegenAutoConfig: {
-    headers: ['import * as db from "../db"'],
-    contextType: 'ctx.Context',
-    sources: [
-      {
-        alias: 'ctx',
-        source: path.join(__dirname, 'context.ts'),
-      },
-    ],
+  contextType: {
+    module: path.join(__dirname, 'context.ts'),
+    export: 'Context',
   },
+
+  //  headers: ['import * as db from "../db"'],
+
   prettierConfig: require.resolve('../.prettierrc'),
 })

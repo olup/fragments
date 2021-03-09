@@ -24,7 +24,7 @@ yarn-error.log*
 
 
 node_modules
-dist/*
+dist
 dist-esm/*
 examples/*/dist
 website/static/playground-dist

@@ -3,7 +3,7 @@ import { DbFragment } from '../db'
 
 export const Fragment = objectType({
   name: 'Fragment',
-  rootTyping: 'db.DbFragmentType',
+  sourceType: 'db.DbFragmentType',
   definition(t) {
     t.id('uuid')
     t.nonNull.string('handle')
