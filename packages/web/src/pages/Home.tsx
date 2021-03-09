@@ -26,9 +26,7 @@ export const Home = () => {
 
   return (
     <div>
-      <Flex style={{ marginBottom: 20 }}>
-        <NewFragment onOutsideClick={refetch} placeholder="New fragment" />
-      </Flex>
+
 
       {loading && !fragments?.length && (
         <Flex justify="center" mt={50}>
@@ -55,6 +53,9 @@ export const Home = () => {
           />
         </Flex>
       ))}
+            <Flex style={{ marginBottom: 20 }}>
+        <NewFragment onOutsideClick={refetch} placeholder="New fragment" />
+      </Flex>
     </div>
   );
 };

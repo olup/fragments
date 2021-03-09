@@ -6,7 +6,7 @@ import {
   useDeleteFragmentMutation,
   useGetFragmentsQuery,
 } from "graphql/generated";
-import React, { useMemo } from "react";
+import React, { createRef, useEffect, useMemo, useRef } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 export const Feed = () => {
@@ -30,16 +30,20 @@ export const Feed = () => {
     refetch();
   };
 
+  const bottomDivRef = useRef<HTMLDivElement>(null)
+
+  useEffect(()=>{
+    bottomDivRef.current?.scrollIntoView()
+  }, [bottomDivRef.current])
+
   return (
-    <>
+    <div style={{paddingBottom : 20}}>
       <Flex style={{ marginBottom: 20 }}>
         <RouterLink to="/">
           <Link>Back home</Link>
         </RouterLink>
       </Flex>
-      <Flex>
-        <NewFragment onOutsideClick={() => refetch()} />
-      </Flex>
+
       {!!starFragments?.length && (
         <>
           <Flex
@@ -84,6 +88,11 @@ export const Feed = () => {
             ))}
         </>
       )}
-    </>
+
+<Flex>
+        <NewFragment onOutsideClick={() => refetch()} />
+      </Flex>
+      <div ref={bottomDivRef} />
+    </div>
   );
 };
