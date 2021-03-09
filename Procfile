@@ -1,0 +1,1 @@
+web: yarn && yarn api build && yarn api start
