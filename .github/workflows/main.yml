@@ -8,9 +8,6 @@ on:
 
 jobs:
   deploy:
-    needs: changes
-    if: ${{ needs.changes.outputs.api == 'true' }}
-
     runs-on: ubuntu-latest
     steps:
       
