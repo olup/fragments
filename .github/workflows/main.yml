@@ -7,36 +7,35 @@ on:
       - main
 
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      api: ${{ steps.filter.outputs.api }}
-    steps:
-    - uses: dorny/paths-filter@v2
-      id: filter
-      with:
-        filters: |
-          api:
-            - 'packages/api/**'
-
   deploy:
     needs: changes
     if: ${{ needs.changes.outputs.api == 'true' }}
 
     runs-on: ubuntu-latest
     steps:
-      # third-party action that cancels previous runs
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.4.0
-        with:
-          access_token: ${{ github.token }}
-
+      
       - name: Cloning repo
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            api:
+              - 'packages/api/**'
+
+      # third-party action that cancels previous runs
+      - name: Cancel Previous Runs
+        if: steps.filter.outputs.api == 'true'
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+
+
       - name: Push to dokku
+        if: steps.filter.outputs.api == 'true'
         uses: dokku/github-action@master
         with:
           git_remote_url: 'ssh://dokku@188.166.11.100:22/fragment'
