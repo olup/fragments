@@ -30,18 +30,22 @@ export const Feed = () => {
     refetch();
   };
 
-  const bottomDivRef = useRef<HTMLDivElement>(null)
+  const bottomDivRef = useRef<HTMLDivElement>(null);
 
-  useEffect(()=>{
-    bottomDivRef.current?.scrollIntoView()
-  }, [bottomDivRef.current])
+  useEffect(() => {
+    bottomDivRef.current?.scrollIntoView();
+  }, [bottomDivRef.current]);
 
   return (
-    <div style={{paddingBottom : 20}}>
+    <div style={{ paddingBottom: 20 }}>
       <Flex style={{ marginBottom: 20 }}>
         <RouterLink to="/">
           <Link>Back home</Link>
         </RouterLink>
+      </Flex>
+
+      <Flex>
+        <NewFragment onOutsideClick={() => refetch()} />
       </Flex>
 
       {!!starFragments?.length && (
@@ -89,9 +93,6 @@ export const Feed = () => {
         </>
       )}
 
-<Flex>
-        <NewFragment onOutsideClick={() => refetch()} />
-      </Flex>
       <div ref={bottomDivRef} />
     </div>
   );

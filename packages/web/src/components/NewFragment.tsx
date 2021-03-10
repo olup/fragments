@@ -8,6 +8,7 @@ const NewBlock = styled.div`
   padding: 20px;
   background-color: white;
   width: 100%;
+  box-sizing: border-box;
   font-style: italic;
   color: #ccc;
   font-size: 20px;
@@ -17,7 +18,12 @@ const NewBlock = styled.div`
 export const NewFragment: FC<{
   onOutsideClick?: () => any;
   placeholder?: string;
-}> = ({ onOutsideClick, placeholder = "What's on your mind ?" }) => {
+  initialContent?: string;
+}> = ({
+  onOutsideClick,
+  placeholder = "What's on your mind ?",
+  initialContent,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const handleOutsideClick = () => {
     setIsEditing(false);
@@ -32,7 +38,11 @@ export const NewFragment: FC<{
     return (
       <div style={{ width: "100%" }}>
         <OutsideClickHandler onOutsideClick={handleOutsideClick}>
-          <Fragment autoFocus onDelete={() => setIsEditing(false)} />
+          <Fragment
+            autoFocus
+            onDelete={() => setIsEditing(false)}
+            initialContent={initialContent}
+          />
         </OutsideClickHandler>
       </div>
     );

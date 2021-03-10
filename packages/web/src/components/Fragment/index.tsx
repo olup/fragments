@@ -1,8 +1,18 @@
-import { Fragment as FragmentType } from "graphql/generated";
+import { Editor } from "components/Editor";
+import { Preview } from "components/Preview";
+import { FragmentProvider } from "contexts/fragment";
+import { format } from "date-fns";
 import React, { FC } from "react";
+import {
+  HiOutlineBadgeCheck,
+  HiOutlineChartSquareBar,
+  HiOutlineLink,
+  HiOutlineTrash,
+} from "react-icons/hi";
+import { Link as RouterLink } from "react-router-dom";
+import { FragmentDisplayType } from "types";
 import { Expander, Flex } from "../Layout";
 import { Link } from "../Link";
-import { Link as RouterLink } from "react-router-dom";
 import { useLogic } from "./hooks";
 import {
   BackLinksLine,
@@ -11,21 +21,10 @@ import {
   HideOut,
   Info,
 } from "./styles";
-import { format } from "date-fns";
-import { FragmentProvider } from "contexts/fragment";
-import { Editor } from "components/Editor";
-import {
-  HiOutlineBadgeCheck,
-  HiOutlineChartSquareBar,
-  HiOutlineLink,
-  HiOutlineTrash,
-} from "react-icons/hi";
-import { Preview } from "components/Preview";
-import { FragmentDisplayType } from "types";
 
 export const Fragment: FC<{
   fragment?: FragmentDisplayType;
-
+  initialContent?: string;
   onDelete?: (uuid?: string) => any | void;
   onHandleChange?: (handle: string) => any | void;
   autoFocus?: boolean;
@@ -33,6 +32,7 @@ export const Fragment: FC<{
   fragment,
   onDelete,
   autoFocus,
+  initialContent,
   onHandleChange: onHandleChangeParent,
 }) => {
   const {
@@ -45,7 +45,7 @@ export const Fragment: FC<{
     useSpellCheck,
     setUseSpellCheck,
     uuid,
-  } = useLogic(fragment, autoFocus, onHandleChangeParent);
+  } = useLogic(fragment, autoFocus, onHandleChangeParent, initialContent);
 
   return (
     <FragmentProvider value={fragment || undefined}>
@@ -71,7 +71,7 @@ export const Fragment: FC<{
           <Editor
             autoFocus={autoFocus}
             onChange={onContentChange}
-            initialValue={fragment?.content || ""}
+            initialValue={fragment?.content || initialContent || ""}
             handle={handle}
             autoSave
             spellCheck={useSpellCheck}

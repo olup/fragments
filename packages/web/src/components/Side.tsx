@@ -3,15 +3,14 @@ import {
   useGetFragmentsPreviewQuery,
   useGetTagsQuery,
 } from "graphql/generated";
+import humanId from "human-id";
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { HiOutlinePlus } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce/lib";
-import { Button } from "./Button";
 import { Flex } from "./Layout";
 import { Loading } from "./Loading";
-import { useHotkeys } from "react-hotkeys-hook";
-import humanId from "human-id";
 
 const SIDE_WIDTH = 250;
 
@@ -126,11 +125,10 @@ export const Side: FC = () => {
 
           <Flex
             onClick={navigateToNew}
-            style={{ marginBottom: 20, display: "block" }}
+            as={Title}
+            style={{ marginBottom: 20, display: "block", cursor: "pointer" }}
           >
-            <Button>
-              <HiOutlinePlus size={15} /> New fragment
-            </Button>
+            <HiOutlinePlus size={15} /> New fragment
           </Flex>
 
           <Flex mb={20} mr={-20} ml={-20}>
@@ -158,7 +156,7 @@ export const Side: FC = () => {
 
               <Title>Tags</Title>
               {tags?.map((tag) => (
-                <div style={{ marginLeft: 10 }}>
+                <div style={{ marginLeft: 10 }} key={tag}>
                   <Link to={"/tag/" + tag}>{tag}</Link>
                 </div>
               ))}

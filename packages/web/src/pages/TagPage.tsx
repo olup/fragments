@@ -3,6 +3,7 @@ import { Fragment } from "components/Fragment";
 import { Flex } from "components/Layout";
 import { Link } from "components/Link";
 import { Loading } from "components/Loading";
+import { NewFragment } from "components/NewFragment";
 import {
   useDeleteFragmentMutation,
   useGetFragmentsQuery,
@@ -20,16 +21,19 @@ export const TagPage = () => {
 
   const { data: fragmentQuery, refetch, loading } = useGetFragmentsQuery({
     variables: { filter: { tags: tag } },
+    fetchPolicy: "cache-and-network",
   });
-  const fragments = useMemo(() => fragmentQuery?.fragments, [fragmentQuery]);
+  const fragments = useMemo(() => fragmentQuery?.fragments.slice().reverse(), [
+    fragmentQuery,
+  ]);
   const { data: tagsQuery } = useGetTagsQuery({
     fetchPolicy: "cache-and-network",
   });
   const subTags = tagsQuery?.tags.filter((t) => t.startsWith(tag + "-"));
 
   const [deleteFragment] = useDeleteFragmentMutation();
-  const onDelete = (uuid: string) => {
-    deleteFragment({ variables: { uuid } });
+  const onDelete = async (uuid: string) => {
+    await deleteFragment({ variables: { uuid } });
     refetch();
   };
 
@@ -51,7 +55,7 @@ export const TagPage = () => {
       {!!subTags?.length && (
         <Flex mb={30}>
           {subTags.map((tag) => (
-            <RouterLink to={"/tag/" + tag}>
+            <RouterLink to={"/tag/" + tag} key={tag}>
               <Link style={{ marginRight: 10 }}>#{tag}</Link>
             </RouterLink>
           ))}
@@ -72,6 +76,12 @@ export const TagPage = () => {
           />
         </Flex>
       ))}
+
+      <NewFragment
+        initialContent={`\n#${tag}`}
+        placeholder="Add a note to this list"
+        onOutsideClick={refetch}
+      />
     </Flex>
   );
 };

@@ -6,7 +6,8 @@ import { FragmentDisplayType } from "types";
 export const useLogic = (
   fragment?: FragmentDisplayType,
   autoFocus?: boolean,
-  onHandleChangeParent?: (handle: string) => any | void
+  onHandleChangeParent?: (handle: string) => any | void,
+  initialContent?: string
 ) => {
   const navigate = useNavigate();
 
@@ -26,7 +27,9 @@ export const useLogic = (
   const [uuid, setUuid] = useState<string | undefined>(
     fragment?.uuid || undefined
   );
-  const [content, setContent] = useState<string>(fragment?.content || "");
+  const [content, setContent] = useState<string>(
+    fragment?.content || initialContent || ""
+  );
 
   const count = useCallback((content: string) => {
     setC(content.length);
