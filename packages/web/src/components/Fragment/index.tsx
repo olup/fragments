@@ -27,8 +27,14 @@ export const Fragment: FC<{
   fragment?: FragmentDisplayType;
 
   onDelete?: (uuid?: string) => any | void;
+  onHandleChange?: (handle: string) => any | void;
   autoFocus?: boolean;
-}> = ({ fragment, onDelete, autoFocus }) => {
+}> = ({
+  fragment,
+  onDelete,
+  autoFocus,
+  onHandleChange: onHandleChangeParent,
+}) => {
   const {
     handle,
     hasBackLinks,
@@ -39,7 +45,7 @@ export const Fragment: FC<{
     useSpellCheck,
     setUseSpellCheck,
     uuid,
-  } = useLogic(fragment, autoFocus);
+  } = useLogic(fragment, autoFocus, onHandleChangeParent);
 
   return (
     <FragmentProvider value={fragment || undefined}>

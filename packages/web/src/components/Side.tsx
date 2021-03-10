@@ -5,11 +5,13 @@ import {
 } from "graphql/generated";
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { HiOutlinePlus } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce/lib";
 import { Button } from "./Button";
 import { Flex } from "./Layout";
 import { Loading } from "./Loading";
+import { useHotkeys } from "react-hotkeys-hook";
+import humanId from "human-id";
 
 const SIDE_WIDTH = 250;
 
@@ -17,7 +19,7 @@ const SideStyled = styled.div<{ isVisible?: boolean }>`
   width: ${(p) => (p.isVisible ? SIDE_WIDTH : 0)}px;
   box-sizing: border-box;
   overflow: hidden;
-  color: #e3d18a;
+  color: #f4f1de;
   transition: 0.5s;
 
   position: fixed;
@@ -30,7 +32,7 @@ const SideStyled = styled.div<{ isVisible?: boolean }>`
 `;
 
 const Inside = styled.div`
-  background-color: #85603f;
+  background-color: #3d405b;
   width: ${SIDE_WIDTH}px;
   padding: 20px;
   padding-top: 50px;
@@ -43,7 +45,7 @@ const FixLink = styled.span`
   top: 10px;
   left: 20px;
   padding: 3px;
-  color: #e3d18a;
+  color: #222;
   cursor: pointer;
   &:hover {
     border-bottom: 1px dashed;
@@ -74,6 +76,7 @@ export const Side: FC = () => {
   const tagQuery = useGetTagsQuery();
   const tags = [...(tagQuery?.data?.tags || [])].sort();
   const [debouncedSearch] = useDebounce(search, 300);
+  const navigate = useNavigate();
 
   const { data: fragmentsFoundResponse, loading } = useGetFragmentsPreviewQuery(
     {
@@ -98,6 +101,16 @@ export const Side: FC = () => {
     setSearch("");
   }, [isVisible, setIsVisbile, setSearch]);
 
+  const navigateToNew = () => {
+    const url = "/handle/" + humanId({ capitalize: false, separator: "-" });
+    navigate(url);
+  };
+
+  useHotkeys("ctrl+b", (e) => {
+    e.preventDefault();
+    navigateToNew();
+  });
+
   return (
     <>
       <SideStyled
@@ -111,11 +124,14 @@ export const Side: FC = () => {
             {isVisible ? "Hide" : "Show"} Side
           </FixLink>
 
-          <Link to="/handle/new" style={{ marginBottom: 20, display: "block" }}>
+          <Flex
+            onClick={navigateToNew}
+            style={{ marginBottom: 20, display: "block" }}
+          >
             <Button>
               <HiOutlinePlus size={15} /> New fragment
             </Button>
-          </Link>
+          </Flex>
 
           <Flex mb={20} mr={-20} ml={-20}>
             <SearchInput
@@ -142,8 +158,8 @@ export const Side: FC = () => {
 
               <Title>Tags</Title>
               {tags?.map((tag) => (
-                <div>
-                  <Link to={"/tag/" + tag}>#{tag}</Link>
+                <div style={{ marginLeft: 10 }}>
+                  <Link to={"/tag/" + tag}>{tag}</Link>
                 </div>
               ))}
             </>

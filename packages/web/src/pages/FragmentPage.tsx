@@ -25,6 +25,9 @@ export const FragmentPage = () => {
     if (fragment?.uuid) deleteFragment({ variables: { uuid: fragment?.uuid } });
     navigate("/");
   };
+  const onHandleChange = (newHandle: string) => {
+    window.history.pushState(undefined, "", newHandle);
+  };
 
   const showLoader = loading && !fragment;
 
@@ -54,6 +57,7 @@ export const FragmentPage = () => {
             }
           }
           key={fragment?.handle}
+          onHandleChange={onHandleChange}
           onDelete={onDelete}
         />
       )}

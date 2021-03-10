@@ -3,6 +3,7 @@
  * Do not make changes to this file directly
  */
 
+import { Context } from './../context'
 import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin'
 import { core } from 'nexus'
 declare global {
@@ -55,19 +56,11 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
-  DateTime: any
+  DateTime: Date
 }
 
 export interface NexusGenObjects {
-  Fragment: {
-    // root type
-    content: string // String!
-    createdAt?: NexusGenScalars['DateTime'] | null // DateTime
-    handle: string // String!
-    previewContent: string // String!
-    tags: string[] // [String!]!
-    uuid?: string | null // ID
-  }
+  Fragment: db.DbFragmentType
   Mutation: {}
   Query: {}
   User: {
@@ -196,7 +189,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: any
+  context: Context
   inputTypes: NexusGenInputs
   rootTypes: NexusGenRootTypes
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars

@@ -1,22 +1,13 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Container, Main, Body, Flex } from "components/Layout";
+import { Body, Container, Flex, Main } from "components/Layout";
+import { Loading } from "components/Loading";
 import { Side } from "components/Side";
-import { FragmentPage } from "pages/FragmentPage";
 import { Feed } from "pages/Feed";
+import { FragmentPage } from "pages/FragmentPage";
 import { Home } from "pages/Home";
 import { TagPage } from "pages/TagPage";
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Link,
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
-import { Loading } from "components/Loading";
-import humanId from "human-id";
-import { HiOutlinePlus } from "react-icons/hi";
-import { Button } from "components/Button";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 export const MainRouter = () => {
   const { loginWithRedirect, isLoading, isAuthenticated } = useAuth0();
@@ -50,13 +41,6 @@ export const MainRouter = () => {
               </Route>
               <Route path="/handle/:handle">
                 <FragmentPage />
-              </Route>
-              <Route path="/handle/new">
-                <Navigate
-                  to={
-                    "/handle/" + humanId({ capitalize: false, separator: "-" })
-                  }
-                />
               </Route>
               <Route path="/tag/:tag">
                 <TagPage />

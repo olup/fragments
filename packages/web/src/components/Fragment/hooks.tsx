@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { FragmentDisplayType } from "types";
 export const useLogic = (
   fragment?: FragmentDisplayType,
-  autoFocus?: boolean
+  autoFocus?: boolean,
+  onHandleChangeParent?: (handle: string) => any | void
 ) => {
   const navigate = useNavigate();
 
@@ -62,6 +63,7 @@ export const useLogic = (
   const onHandleChange = (handle: string) => {
     setHandle(handle);
     setIsDirty(true);
+    onHandleChangeParent?.(handle);
   };
 
   useEffect(() => {
