@@ -1,7 +1,7 @@
 import { createDraft, finishDraft } from "immer";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { createEditor, Node, Transforms } from "slate";
-import { Editable, Slate, withReact } from "slate-react";
+import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { useDebouncedCallback } from "use-debounce/lib";
 import { SHORTCUTS } from "./constant";
 import { ForbidenHandlesProvider, useForbidenHandlesContext } from "./context";
@@ -37,12 +37,6 @@ export const Editor: FC<EditorProps> = ({
   onSave,
   onBlur,
 }) => {
-  const editorRef = useRef<any>(null);
-
-  useEffect(() => {
-    if (autoFocus) editorRef.current?.focus();
-  }, [autoFocus]);
-
   const [editorState, setEditorState] = useState(serialize(initialValue));
   const [selectionState, setSelectionState] = useState<any>(null);
 
@@ -50,6 +44,10 @@ export const Editor: FC<EditorProps> = ({
     () => withReact(withNestedEditor(withNormalize(createEditor()))),
     []
   );
+
+  useEffect(() => {
+    if (autoFocus) setTimeout(() => ReactEditor.focus(editor), 10);
+  }, [editor]);
 
   const debouncedSave = useDebouncedCallback(async () => {
     onSave?.(deserialize(editorState));
@@ -151,15 +149,9 @@ export const Editor: FC<EditorProps> = ({
   return (
     <ForbidenHandlesProvider value={[...forbidenHandles, handle]}>
       <EditorStyled>
-        <Slate
-          editor={editor}
-          value={editorState}
-          onChange={onChange}
-          ref={editorRef}
-        >
+        <Slate editor={editor} value={editorState} onChange={onChange}>
           <Editable
             renderElement={BlockElement}
-            autoFocus
             decorate={decorate}
             renderLeaf={Leaf}
             onBlur={handleBlur}

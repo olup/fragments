@@ -1,9 +1,7 @@
 import { inputObjectType, objectType } from 'nexus'
-import { DbFragment } from '../db'
-
 export const Fragment = objectType({
   name: 'Fragment',
-  sourceType: 'db.DbFragmentType',
+  // sourceType: 'db.DbFragmentType',
   definition(t) {
     t.id('uuid')
     t.nonNull.string('handle')

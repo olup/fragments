@@ -6,34 +6,34 @@ import {
 import humanId from "human-id";
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { HiOutlinePlus } from "react-icons/hi";
+import { HiHashtag, HiOutlinePlus, HiTag } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce/lib";
 import { Flex } from "./Layout";
 import { Loading } from "./Loading";
 
-const SIDE_WIDTH = 250;
+const SIDE_WIDTH = 300;
 
 const SideStyled = styled.div<{ isVisible?: boolean }>`
   width: ${(p) => (p.isVisible ? SIDE_WIDTH : 0)}px;
   box-sizing: border-box;
   overflow: hidden;
-  color: #f4f1de;
+  color: #f1faee;
   transition: 0.5s;
 
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
-  font-size: 20px;
+  font-size: 22px;
 
   z-index: 100;
 `;
 
 const Inside = styled.div`
-  background-color: #3d405b;
+  background-color: #1d3557;
   width: ${SIDE_WIDTH}px;
-  padding: 20px;
+  //padding: 20px;
   padding-top: 50px;
   height: 100%;
   box-sizing: border-box;
@@ -56,8 +56,20 @@ const Title = styled.div`
   margin-bottom: 5px;
 `;
 
+const SideLink = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  padding-left: 20px;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+`;
+
 const SearchInput = styled.input`
   padding: 10px 20px;
+  box-sizing: border-box;
   border: none;
   outline: none;
   font-size: 18px;
@@ -125,13 +137,13 @@ export const Side: FC = () => {
 
           <Flex
             onClick={navigateToNew}
-            as={Title}
+            as={SideLink}
             style={{ marginBottom: 20, display: "block", cursor: "pointer" }}
           >
-            <HiOutlinePlus size={15} /> New fragment
+            <HiOutlinePlus size={15} /> New fragment [ctrl b]
           </Flex>
 
-          <Flex mb={20} mr={-20} ml={-20}>
+          <Flex mb={20}>
             <SearchInput
               placeholder="search"
               value={search}
@@ -146,19 +158,22 @@ export const Side: FC = () => {
 
           {!search && (
             <>
-              <Title style={{ marginBottom: 10 }}>
-                <Link to={"/"}>Home</Link>
-              </Title>
+              <Link to={"/"}>
+                <Title as={SideLink}>Home</Title>
+              </Link>
 
-              <Title style={{ marginBottom: 10 }}>
-                <Link to={"/feed"}>Feed</Link>
-              </Title>
+              <Link to={"/feed"}>
+                <Title as={SideLink}>Feed</Title>
+              </Link>
 
-              <Title>Tags</Title>
+              <Title as={SideLink}>Tags</Title>
               {tags?.map((tag) => (
-                <div style={{ marginLeft: 10 }} key={tag}>
-                  <Link to={"/tag/" + tag}>{tag}</Link>
-                </div>
+                <Link to={"/tag/" + tag}>
+                  <SideLink key={tag}>
+                    <HiHashtag size={20} style={{ marginRight: 10 }} />
+                    {tag}
+                  </SideLink>
+                </Link>
               ))}
             </>
           )}

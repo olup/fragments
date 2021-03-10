@@ -6,7 +6,7 @@ import {
   useDeleteFragmentMutation,
   useGetFragmentsQuery,
 } from "graphql/generated";
-import React, { createRef, useEffect, useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 export const Feed = () => {
@@ -29,12 +29,6 @@ export const Feed = () => {
     deleteFragment({ variables: { uuid } });
     refetch();
   };
-
-  const bottomDivRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    bottomDivRef.current?.scrollIntoView();
-  }, [bottomDivRef.current]);
 
   return (
     <div style={{ paddingBottom: 20 }}>
@@ -92,8 +86,6 @@ export const Feed = () => {
             ))}
         </>
       )}
-
-      <div ref={bottomDivRef} />
     </div>
   );
 };

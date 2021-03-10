@@ -60,7 +60,15 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
-  Fragment: db.DbFragmentType
+  Fragment: {
+    // root type
+    content: string // String!
+    createdAt?: NexusGenScalars['DateTime'] | null // DateTime
+    handle: string // String!
+    previewContent: string // String!
+    tags: string[] // [String!]!
+    uuid?: string | null // ID
+  }
   Mutation: {}
   Query: {}
   User: {

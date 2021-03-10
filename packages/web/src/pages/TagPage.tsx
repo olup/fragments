@@ -10,6 +10,7 @@ import {
   useGetTagsQuery,
 } from "graphql/generated";
 import React, { useMemo } from "react";
+import { HiHashtag } from "react-icons/hi";
 import { Link as RouterLink, useParams } from "react-router-dom";
 
 const SubTagsBlock = styled.div`
@@ -38,7 +39,7 @@ export const TagPage = () => {
   };
 
   return (
-    <Flex col key={tag}>
+    <Flex col key={tag} mb={20}>
       <RouterLink to="/">
         <Link>Back home</Link>
       </RouterLink>
@@ -50,13 +51,15 @@ export const TagPage = () => {
           fontSize: 40,
         }}
       >
-        #{tag}
+        <HiHashtag /> {tag}
       </Flex>
       {!!subTags?.length && (
         <Flex mb={30}>
           {subTags.map((tag) => (
             <RouterLink to={"/tag/" + tag} key={tag}>
-              <Link style={{ marginRight: 10 }}>#{tag}</Link>
+              <Link style={{ marginRight: 10 }}>
+                <HiHashtag /> {tag}
+              </Link>
             </RouterLink>
           ))}
         </Flex>
