@@ -181,9 +181,9 @@ export const Side: FC = () => {
           {search && (
             <>
               {fragmentsFound?.map((frament) => (
-                <div>
+                <SideLink>
                   <Link to={"/handle/" + frament.handle}>{frament.handle}</Link>
-                </div>
+                </SideLink>
               ))}
             </>
           )}
