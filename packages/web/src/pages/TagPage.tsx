@@ -66,7 +66,7 @@ export const TagPage = () => {
       )}
 
       {loading && !fragments?.length && (
-        <Flex justify="center" mt={50}>
+        <Flex justify="center" align={"center"} h={100}>
           <Loading />
         </Flex>
       )}
