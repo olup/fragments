@@ -26,8 +26,6 @@ export const Home = () => {
 
   return (
     <div>
-
-
       {loading && !fragments?.length && (
         <Flex justify="center" mt={50}>
           <Loading />
@@ -53,7 +51,7 @@ export const Home = () => {
           />
         </Flex>
       ))}
-            <Flex style={{ marginBottom: 20 }}>
+      <Flex style={{ marginBottom: 20 }}>
         <NewFragment onOutsideClick={refetch} placeholder="New fragment" />
       </Flex>
     </div>
