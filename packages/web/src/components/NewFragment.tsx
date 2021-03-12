@@ -25,7 +25,7 @@ export const NewFragment: FC<{
   initialContent,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const handleOutsideClick = () => {
+  const handleBlur = () => {
     setIsEditing(false);
     onOutsideClick?.();
   };
@@ -36,15 +36,13 @@ export const NewFragment: FC<{
     );
   if (isEditing)
     return (
-      <div style={{ width: "100%" }}>
-        <OutsideClickHandler onOutsideClick={handleOutsideClick}>
-          <Fragment
-            autoFocus
-            onDelete={() => setIsEditing(false)}
-            initialContent={initialContent}
-          />
-        </OutsideClickHandler>
-      </div>
+      <Fragment
+        autoFocus
+        onDelete={() => setIsEditing(false)}
+        initialContent={initialContent}
+        saveOnBlur
+        onBlur={handleBlur}
+      />
     );
 
   return null;

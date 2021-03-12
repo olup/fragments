@@ -59,6 +59,7 @@ export const FragmentPage = () => {
           key={fragment?.handle}
           onHandleChange={onHandleChange}
           onDelete={onDelete}
+          saveOnBlur
         />
       )}
     </>

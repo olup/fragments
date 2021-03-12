@@ -58,6 +58,7 @@ export const Feed = () => {
               <Fragment
                 fragment={fragment}
                 onDelete={(uuid) => uuid && onDelete(uuid)}
+                saveOnBlur
               />
             </Flex>
           ))}
@@ -81,6 +82,7 @@ export const Feed = () => {
                 <Fragment
                   fragment={fragment}
                   onDelete={(uuid) => uuid && onDelete(uuid)}
+                  saveOnBlur
                 />
               </Flex>
             ))}

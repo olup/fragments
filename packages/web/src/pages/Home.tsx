@@ -27,7 +27,7 @@ export const Home = () => {
   return (
     <div>
       {loading && !fragments?.length && (
-        <Flex justify="center" mt={50}>
+        <Flex justify="center" align={"center"} h={100}>
           <Loading />
         </Flex>
       )}
@@ -48,6 +48,7 @@ export const Home = () => {
           <Fragment
             fragment={fragment}
             onDelete={(uuid) => uuid && onDelete(uuid)}
+            saveOnBlur
           />
         </Flex>
       ))}

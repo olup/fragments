@@ -34,7 +34,6 @@ export const Editor: FC<EditorProps> = ({
   autoFocus,
   autoSave = false,
   spellCheck = false,
-  onSave,
   onBlur,
 }) => {
   const [editorState, setEditorState] = useState(serialize(initialValue));
@@ -49,13 +48,8 @@ export const Editor: FC<EditorProps> = ({
     if (autoFocus) setTimeout(() => ReactEditor.focus(editor), 10);
   }, [editor]);
 
-  const debouncedSave = useDebouncedCallback(async () => {
-    onSave?.(deserialize(editorState));
-  }, 1000);
-
   const handleBlur = (e: any) => {
     onBlur?.(e);
-    onSave?.(deserialize(editorState));
   };
 
   const onChange = (value: any) => {
@@ -126,9 +120,6 @@ export const Editor: FC<EditorProps> = ({
 
     // fire top editor component onChange event
     onChangeParent?.(deserialize(editorContent));
-
-    // fire save event
-    if (autoSave) debouncedSave();
   };
 
   // serialize live on first mount

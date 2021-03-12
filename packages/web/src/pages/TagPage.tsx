@@ -76,6 +76,7 @@ export const TagPage = () => {
           <Fragment
             fragment={fragment}
             onDelete={(uuid) => uuid && onDelete(uuid)}
+            saveOnBlur
           />
         </Flex>
       ))}

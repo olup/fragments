@@ -1,14 +1,20 @@
 import { useSaveFragmentMutation } from "graphql/generated";
 import getHumanId from "human-id";
 import { useCallback, useEffect, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { useNavigate } from "react-router-dom";
 import { FragmentDisplayType } from "types";
-export const useLogic = (
-  fragment?: FragmentDisplayType,
-  autoFocus?: boolean,
-  onHandleChangeParent?: (handle: string) => any | void,
-  initialContent?: string
-) => {
+import { useDebouncedCallback } from "use-debounce/lib";
+import { FragmentProps } from "./index";
+export const useLogic = ({
+  fragment,
+  autoFocus,
+  onHandleChange: onHandleChangeParent,
+  initialContent,
+  saveOnBlur,
+  autoSave,
+  onBlur: onOutsideClick,
+}: FragmentProps) => {
   const navigate = useNavigate();
 
   const [isDirty, setIsDirty] = useState(false);
@@ -57,10 +63,15 @@ export const useLogic = (
     return result;
   }, [isDirty, uuid, content, handle, loading, saveFragment]);
 
+  const debouncedSave = useDebouncedCallback(async () => {
+    onSave();
+  }, 1000);
+
   const onContentChange = useCallback((newContent: string) => {
     if (content === newContent) return;
     setContent(newContent);
     setIsDirty(true);
+    if (autoSave) debouncedSave();
   }, []);
 
   const onHandleChange = (handle: string) => {
@@ -81,15 +92,26 @@ export const useLogic = (
 
   const hasBackLinks = !!fragment?.linkedBy?.length;
 
+  const handleBlur = async () => {
+    if (saveOnBlur) await onSave();
+    onOutsideClick?.();
+  };
+
+  useHotkeys("ctrl+s", (e) => {
+    e.preventDefault();
+    onSave();
+  });
+
   return {
-    hasBackLinks,
     setHandle,
     onSave,
     onContentChange,
     onHandleChange,
     goToHandlePage,
-    useSpellCheck,
     setUseSpellCheck,
+    handleBlur,
+    hasBackLinks,
+    useSpellCheck,
     handle,
     w,
     c,
