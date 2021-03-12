@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   useGetFragmentsPreviewQuery,
@@ -87,6 +88,7 @@ export const Side: FC = () => {
   const tagQuery = useGetTagsQuery();
   const tags = [...(tagQuery?.data?.tags || [])].sort();
   const [debouncedSearch] = useDebounce(search, 300);
+  const { textColor } = useTheme().colors;
   const navigate = useNavigate();
 
   const { data: fragmentsFoundResponse, loading } = useGetFragmentsPreviewQuery(
@@ -131,7 +133,7 @@ export const Side: FC = () => {
 
       <SideStyled isVisible={isVisible}>
         <Inside>
-          <FixLink onClick={handleToggleShow}>
+          <FixLink onClick={handleToggleShow} style={{ color: textColor }}>
             {isVisible ? "Hide" : "Show"} Side
           </FixLink>
 

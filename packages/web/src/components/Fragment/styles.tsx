@@ -11,7 +11,8 @@ export const Info = styled(Flex)`
 export const HideOut = styled.div``;
 export const FragmentStyled = styled.div`
   padding: 20px 30px;
-  background-color: white;
+  background-color: ${(p) => p.theme.colors.fragmentBackgroundColor};
+  color: ${(p) => p.theme.colors.textColor};
   width: 100%;
   box-sizing: border-box;
   box-shadow: 7px 7px 0px 0px #00000008;

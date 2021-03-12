@@ -6,7 +6,7 @@ import OutsideClickHandler from "react-outside-click-handler";
 
 const NewBlock = styled.div`
   padding: 20px;
-  background-color: white;
+  background-color: ${(p) => p.theme.colors.fragmentBackgroundColor};
   width: 100%;
   box-sizing: border-box;
   font-style: italic;

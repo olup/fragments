@@ -1,14 +1,11 @@
 import { Fragment } from "components/Fragment";
 import { Flex } from "components/Layout";
-import { Link } from "components/Link";
 import { Loading } from "components/Loading";
 import { NewFragment } from "components/NewFragment";
 import {
   useDeleteFragmentMutation,
-  useGetFragmentByHandleQuery,
   useGetFragmentsQuery,
 } from "graphql/generated";
-import React, { useCallback } from "react";
 
 export const Home = () => {
   const { data, loading, refetch } = useGetFragmentsQuery({
