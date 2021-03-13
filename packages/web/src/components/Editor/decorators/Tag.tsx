@@ -8,6 +8,7 @@ const TagStyled = styled.span<{
   showAsLink?: boolean;
 }>`
   background-color: #ffebcc;
+  color: #222;
   padding: 0 5px;
 
   ${(p) =>

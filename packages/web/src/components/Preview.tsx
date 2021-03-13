@@ -13,11 +13,13 @@ const PreviewStyled = styled.div`
   bottom: 100%;
   left: 0;
   padding-bottom: 10px;
+
   div.content {
     //border-radius: 5px;
     border: 1px solid #dfdfdf;
-    background-color: white;
-    box-shadow: 4px 4px 0px 0px  rgba(0, 0, 0, 0.1);
+    color: ${(p) => p.theme.colors.textColor};
+    background-color: ${(p) => p.theme.colors.fragmentBackgroundColor};
+    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.1);
     padding: 10px;
     font-size: 14px;
   }

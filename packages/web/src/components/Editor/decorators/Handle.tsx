@@ -15,12 +15,14 @@ const HandleStyled = styled.span<{
 }>`
   background-color: ${(p) => (p.exists ? "#e2f8ff" : "#f1f1f1")};
   padding: 0 5px;
+  color: #222;
 
   ${(p) =>
     p.inline &&
     css`
       opacity: 0.2;
       padding-right: 0;
+
       background-color: transparent;
     `}
 
