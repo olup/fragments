@@ -2,6 +2,7 @@ import React from "react";
 import { Code } from "./Code";
 import { Handle } from "./Handle";
 import { Tag } from "./Tag";
+import { Url } from "./Url";
 
 export const Leaf = ({ attributes, children, leaf }: any) => {
   if (leaf.type === "handle")
@@ -23,6 +24,13 @@ export const Leaf = ({ attributes, children, leaf }: any) => {
       <Tag {...attributes} text={leaf.text}>
         {children}
       </Tag>
+    );
+
+  if (leaf.type === "url")
+    return (
+      <Url {...attributes} text={leaf.text}>
+        {children}
+      </Url>
     );
 
   if (leaf.type === "code") return <Code {...attributes}>{children}</Code>;
