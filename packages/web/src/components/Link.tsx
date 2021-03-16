@@ -5,7 +5,7 @@ export const Link = styled.span`
   color: #ccc;
   border-bottom: 1px dashed transparent;
   &:hover {
-    color: #222;
-    border-color: #222;
+    color: #616161;
+    border-color: #616161;
   }
 `;

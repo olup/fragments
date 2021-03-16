@@ -45,6 +45,10 @@ export const Fragment: FC<FragmentProps> = (props) => {
     hasBackLinks,
     uuid,
     handleBlur,
+    showCount,
+    setShowCount,
+    c,
+    w,
   } = useLogic(props);
 
   const { fragment, autoFocus, initialContent, onDelete } = props;
@@ -80,7 +84,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
               spellCheck={useSpellCheck}
             />
             <HideOut>
-              <Flex style={{ marginTop: 20 }}>
+              <Flex mt={20}>
                 <Info>
                   {format(fragment?.createdAt || new Date(), "dd/MM/yyyy")}
                 </Info>
@@ -90,11 +94,16 @@ export const Fragment: FC<FragmentProps> = (props) => {
                   </Link>
                 </Info>
                 <Info ml={10}>
-                  <Link>
+                  <Link onClick={() => setShowCount(!showCount)}>
                     <HiOutlineChartSquareBar />
                   </Link>
                 </Info>
                 <Expander />
+                {showCount && (
+                  <Flex>
+                    c {c} | w {w}
+                  </Flex>
+                )}
               </Flex>
             </HideOut>
           </FragmentStyled>

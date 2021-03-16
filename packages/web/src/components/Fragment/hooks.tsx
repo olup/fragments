@@ -19,6 +19,7 @@ export const useLogic = ({
 
   const [isDirty, setIsDirty] = useState(false);
   const [useSpellCheck, setUseSpellCheck] = useState(false);
+  const [showCount, setShowCount] = useState(false);
 
   const [c, setC] = useState(0);
   const [w, setW] = useState(0);
@@ -110,6 +111,8 @@ export const useLogic = ({
     goToHandlePage,
     setUseSpellCheck,
     handleBlur,
+    setShowCount,
+    showCount,
     hasBackLinks,
     useSpellCheck,
     handle,
