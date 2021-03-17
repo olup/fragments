@@ -25,18 +25,18 @@ const Header = styled.div`
 const HiddenHeader = styled.div`
   width: 100%;
   background-color: ${(p) => p.theme.colors.pageBackgroundColor};
-  top: -100%;
+  top: -100px;
   position: fixed;
   z-index: 10;
-  &.header--detached {
+  transition: 0.3s;
+  &.sticky {
     top: 0;
-    transition: 0.3s;
   }
 `;
 
 export const TagPage = () => {
   const { tag } = useParams();
-  const [headerRef] = useStickyHeader(100);
+  const [isSticky] = useStickyHeader(250);
 
   const { data: fragmentQuery, refetch, loading } = useGetFragmentsQuery({
     variables: { filter: { tags: tag } },
@@ -58,7 +58,7 @@ export const TagPage = () => {
 
   return (
     <Flex col key={tag} mb={20}>
-      <HiddenHeader ref={headerRef}>
+      <HiddenHeader className={isSticky ? "sticky" : ""}>
         <Header>
           <RouterLink to="/">
             <Link>Back home</Link>
