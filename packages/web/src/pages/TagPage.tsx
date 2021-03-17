@@ -9,6 +9,7 @@ import {
   useGetFragmentsQuery,
   useGetTagsQuery,
 } from "graphql/generated";
+import useStickyHeader from "hooks/useStickyHeader";
 import React, { useMemo } from "react";
 import { HiHashtag } from "react-icons/hi";
 import { Link as RouterLink, useParams } from "react-router-dom";
@@ -17,8 +18,25 @@ const SubTagsBlock = styled.div`
   margin: 10px 0;
 `;
 
+const Header = styled.div`
+  padding: 20px 0;
+`;
+
+const HiddenHeader = styled.div`
+  width: 100%;
+  background-color: ${(p) => p.theme.colors.pageBackgroundColor};
+  top: -100%;
+  position: fixed;
+  z-index: 10;
+  &.header--detached {
+    top: 0;
+    transition: 0.3s;
+  }
+`;
+
 export const TagPage = () => {
   const { tag } = useParams();
+  const [headerRef] = useStickyHeader(100);
 
   const { data: fragmentQuery, refetch, loading } = useGetFragmentsQuery({
     variables: { filter: { tags: tag } },
@@ -40,19 +58,37 @@ export const TagPage = () => {
 
   return (
     <Flex col key={tag} mb={20}>
-      <RouterLink to="/">
-        <Link>Back home</Link>
-      </RouterLink>
-      <Flex
-        mt={10}
-        mb={20}
-        style={{
-          color: "#bbb",
-          fontSize: 40,
-        }}
-      >
-        <HiHashtag /> {tag}
-      </Flex>
+      <HiddenHeader ref={headerRef}>
+        <Header>
+          <RouterLink to="/">
+            <Link>Back home</Link>
+          </RouterLink>
+          <Flex
+            mt={10}
+            style={{
+              color: "#bbb",
+              fontSize: 25,
+            }}
+          >
+            <HiHashtag /> {tag}
+          </Flex>
+        </Header>
+      </HiddenHeader>
+
+      <Header>
+        <RouterLink to="/">
+          <Link>Back home</Link>
+        </RouterLink>
+        <Flex
+          mt={10}
+          style={{
+            color: "#bbb",
+            fontSize: 40,
+          }}
+        >
+          <HiHashtag /> {tag}
+        </Flex>
+      </Header>
       {!!subTags?.length && (
         <Flex mb={30}>
           {subTags.map((tag) => (

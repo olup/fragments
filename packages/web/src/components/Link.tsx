@@ -1,11 +1,10 @@
 import styled from "@emotion/styled";
 
-export const Link = styled.span`
+export const Link = styled.span<{ active?: boolean }>`
   cursor: pointer;
-  color: #ccc;
-  border-bottom: 1px dashed transparent;
+  color: ${(p) => p.theme.colors.textColor};
+  opacity: ${(p) => (p.active ? 0.8 : 0.3)};
   &:hover {
-    color: #616161;
-    border-color: #616161;
+    opacity: 0.8;
   }
 `;

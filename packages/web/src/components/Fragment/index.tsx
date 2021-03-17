@@ -89,19 +89,25 @@ export const Fragment: FC<FragmentProps> = (props) => {
                   {format(fragment?.createdAt || new Date(), "dd/MM/yyyy")}
                 </Info>
                 <Info ml={10}>
-                  <Link onClick={() => setUseSpellCheck(!useSpellCheck)}>
+                  <Link
+                    onClick={() => setUseSpellCheck(!useSpellCheck)}
+                    active={useSpellCheck}
+                  >
                     <HiOutlineBadgeCheck />
                   </Link>
                 </Info>
                 <Info ml={10}>
-                  <Link onClick={() => setShowCount(!showCount)}>
+                  <Link
+                    onClick={() => setShowCount(!showCount)}
+                    active={showCount}
+                  >
                     <HiOutlineChartSquareBar />
                   </Link>
                 </Info>
                 <Expander />
                 {showCount && (
                   <Flex>
-                    c {c} | w {w}
+                    c {c} w {w}
                   </Flex>
                 )}
               </Flex>
