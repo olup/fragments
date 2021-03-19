@@ -1,5 +1,6 @@
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
+import { useEngine } from "contexts/engine";
 import {
   useGetFragmentsPreviewQuery,
   useGetTagsQuery,
@@ -85,29 +86,14 @@ const SearchInput = styled.input`
 export const Side: FC = () => {
   const [isVisible, setIsVisbile] = useState(false);
   const [search, setSearch] = useState("");
-  const tagQuery = useGetTagsQuery();
-  const tags = [...(tagQuery?.data?.tags || [])].sort();
+  const tagsByName = useEngine((s) => s.engine.tags);
+  const tags = Object.keys(tagsByName);
   const [debouncedSearch] = useDebounce(search, 300);
   const { textColor } = useTheme().colors;
   const navigate = useNavigate();
 
-  const { data: fragmentsFoundResponse, loading } = useGetFragmentsPreviewQuery(
-    {
-      skip: !search,
-      variables: {
-        filter: { content: debouncedSearch, handle: debouncedSearch },
-      },
-    }
-  );
-
-  const fragmentsFound = useMemo(
-    () => fragmentsFoundResponse?.fragments || [],
-    [fragmentsFoundResponse?.fragments]
-  );
-
-  useEffect(() => {
-    if (isVisible) tagQuery?.refetch?.();
-  }, [isVisible]);
+  const searchFragments = useEngine((s) => s.actions.searchFragment);
+  const fragmentsFound = searchFragments(debouncedSearch);
 
   const handleToggleShow = useCallback(() => {
     setIsVisbile(!isVisible);
@@ -151,11 +137,6 @@ export const Side: FC = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            {loading && (
-              <Flex style={{ position: "absolute", right: 25, top: 15 }}>
-                <Loading />
-              </Flex>
-            )}
           </Flex>
 
           {!search && (

@@ -4,6 +4,7 @@ import { Flex } from "components/Layout";
 import { Link } from "components/Link";
 import { Loading } from "components/Loading";
 import { NewFragment } from "components/NewFragment";
+import { useEngine } from "contexts/engine";
 import {
   useDeleteFragmentMutation,
   useGetFragmentsQuery,
@@ -35,29 +36,18 @@ const HiddenHeader = styled.div`
 `;
 
 export const TagPage = () => {
-  const { tag } = useParams();
+  const { tag: tagName } = useParams();
   const [isSticky] = useStickyHeader(250);
 
-  const { data: fragmentQuery, refetch, loading } = useGetFragmentsQuery({
-    variables: { filter: { tags: tag } },
-    fetchPolicy: "cache-and-network",
-  });
-  const fragments = useMemo(() => fragmentQuery?.fragments.slice().reverse(), [
-    fragmentQuery,
+  const tag = useEngine((s) => s.engine.tags[tagName]);
+  const getFragments = useEngine((s) => s.actions.getFragments);
+  const deletFragment = useEngine((s) => s.actions.deleteFragment);
+  const fragments = useMemo(() => (tag ? getFragments(tag.handles) : []), [
+    tag,
   ]);
-  const { data: tagsQuery } = useGetTagsQuery({
-    fetchPolicy: "cache-and-network",
-  });
-  const subTags = tagsQuery?.tags.filter((t) => t.startsWith(tag + "-"));
-
-  const [deleteFragment] = useDeleteFragmentMutation();
-  const onDelete = async (uuid: string) => {
-    await deleteFragment({ variables: { uuid } });
-    refetch();
-  };
 
   return (
-    <Flex col key={tag} mb={20}>
+    <Flex col key={tagName} mb={20}>
       <HiddenHeader className={isSticky ? "sticky" : ""}>
         <Header>
           <RouterLink to="/">
@@ -70,7 +60,7 @@ export const TagPage = () => {
               fontSize: 25,
             }}
           >
-            <HiHashtag /> {tag}
+            <HiHashtag /> {tagName}
           </Flex>
         </Header>
       </HiddenHeader>
@@ -86,10 +76,10 @@ export const TagPage = () => {
             fontSize: 40,
           }}
         >
-          <HiHashtag /> {tag}
+          <HiHashtag /> {tagName}
         </Flex>
       </Header>
-      {!!subTags?.length && (
+      {/* {!!subTags?.length && (
         <Flex mb={30}>
           {subTags.map((tag) => (
             <RouterLink to={"/tag/" + tag} key={tag}>
@@ -99,28 +89,28 @@ export const TagPage = () => {
             </RouterLink>
           ))}
         </Flex>
-      )}
-
+      )} */}
+      {/* 
       {loading && !fragments?.length && (
         <Flex justify="center" align={"center"} h={100}>
           <Loading />
         </Flex>
-      )}
+      )} */}
 
       {fragments?.map((fragment) => (
-        <Flex style={{ marginBottom: 20 }} key={fragment.uuid}>
+        <Flex style={{ marginBottom: 20 }} key={fragment.handle}>
           <Fragment
+            // @ts-ignore
             fragment={fragment}
-            onDelete={(uuid) => uuid && onDelete(uuid)}
+            onDelete={(handle) => handle && deletFragment(handle)}
             saveOnBlur
           />
         </Flex>
       ))}
 
       <NewFragment
-        initialContent={`\n#${tag}`}
+        initialContent={`\n#${tagName}`}
         placeholder="Add a note to this list"
-        onOutsideClick={refetch}
       />
     </Flex>
   );

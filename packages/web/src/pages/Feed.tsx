@@ -2,6 +2,7 @@ import { Fragment } from "components/Fragment";
 import { Flex } from "components/Layout";
 import { Link } from "components/Link";
 import { NewFragment } from "components/NewFragment";
+import { useEngine } from "contexts/engine";
 import {
   useDeleteFragmentMutation,
   useGetFragmentsQuery,
@@ -13,22 +14,12 @@ export const Feed = () => {
   const { data: fragmentQuery, refetch } = useGetFragmentsQuery({
     fetchPolicy: "cache-and-network",
   });
-  const fragments = useMemo(() => fragmentQuery?.fragments, [fragmentQuery]);
+  const fragmentsByHandle = useEngine((s) => s.engine.fragments);
+  const fragments = Object.values(fragmentsByHandle);
 
-  const { data: starFragmentQuery } = useGetFragmentsQuery({
-    variables: { filter: { tags: "star" } },
-  });
-
-  const starFragments = useMemo(() => starFragmentQuery?.fragments, [
-    starFragmentQuery,
-  ]);
-
-  const [deleteFragment] = useDeleteFragmentMutation();
-
-  const onDelete = (uuid: string) => {
-    deleteFragment({ variables: { uuid } });
-    refetch();
-  };
+  const starFragments = useEngine((s) =>
+    s.actions.getFragments(s.engine.tags["star"]?.handles || [])
+  );
 
   return (
     <div style={{ paddingBottom: 20 }}>
@@ -54,10 +45,10 @@ export const Feed = () => {
             Star Fragments
           </Flex>
           {starFragments?.map((fragment) => (
-            <Flex style={{ marginBottom: 20 }} key={fragment.uuid}>
+            <Flex style={{ marginBottom: 20 }} key={fragment.handle}>
               <Fragment
                 fragment={fragment}
-                onDelete={(uuid) => uuid && onDelete(uuid)}
+                // onDelete={(uuid) => uuid && onDelete(uuid)}
                 saveOnBlur
               />
             </Flex>
@@ -76,12 +67,14 @@ export const Feed = () => {
             Recent Fragments
           </Flex>
           {fragments
-            ?.filter((f) => !starFragments?.find((st) => st.uuid === f.uuid))
+            ?.filter(
+              (f) => !starFragments?.find((st) => st.handle === f.handle)
+            )
             .map((fragment) => (
-              <Flex style={{ marginBottom: 20 }} key={fragment.uuid}>
+              <Flex style={{ marginBottom: 20 }} key={fragment.handle}>
                 <Fragment
                   fragment={fragment}
-                  onDelete={(uuid) => uuid && onDelete(uuid)}
+                  // onDelete={(handle) => handle && onDelete(handle)}
                   saveOnBlur
                 />
               </Flex>

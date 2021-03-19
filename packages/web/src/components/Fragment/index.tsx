@@ -21,9 +21,10 @@ import {
   HideOut,
   Info,
 } from "./styles";
+import { Fragment as FragmentType } from "libs/engine";
 
 export type FragmentProps = {
-  fragment?: FragmentDisplayType;
+  fragment?: FragmentType;
   initialContent?: string;
   onDelete?: (uuid?: string) => any | void;
   onHandleChange?: (handle: string) => any | void;
@@ -42,8 +43,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
     setUseSpellCheck,
     handle,
     useSpellCheck,
-    hasBackLinks,
-    uuid,
+    //hasBackLinks,
     handleBlur,
     showCount,
     setShowCount,
@@ -69,7 +69,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
                 />
                 <Expander />
                 <div>
-                  <Link onClick={() => onDelete?.(uuid || undefined)}>
+                  <Link onClick={() => onDelete?.(handle || undefined)}>
                     <HiOutlineTrash />
                   </Link>
                 </div>
@@ -85,9 +85,9 @@ export const Fragment: FC<FragmentProps> = (props) => {
             />
             <HideOut>
               <Flex mt={20}>
-                <Info>
+                {/* <Info>
                   {format(fragment?.createdAt || new Date(), "dd/MM/yyyy")}
-                </Info>
+                </Info> */}
                 <Info ml={10}>
                   <Link
                     onClick={() => setUseSpellCheck(!useSpellCheck)}
@@ -113,7 +113,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
               </Flex>
             </HideOut>
           </FragmentStyled>
-          {hasBackLinks && (
+          {/* {hasBackLinks && (
             <BackLinksLine mt={20}>
               <HiOutlineLink />
               {fragment?.linkedBy?.map((link) => (
@@ -129,7 +129,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
                 </Flex>
               ))}
             </BackLinksLine>
-          )}
+          )} */}
         </Flex>
       </FragmentProvider>
     </div>

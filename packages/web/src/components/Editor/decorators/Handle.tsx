@@ -40,7 +40,7 @@ export const Handle = ({ text: leafText, children, inline, ...props }: any) => {
   const navigate = useNavigate();
   const text = leafText?.slice(1) || "";
   const fragment = useFragmentContext();
-  const handlePreview = fragment?.linksTo?.find((l) => l?.handle === text);
+  const handlePreview = undefined; //fragment?.linksTo?.find((l) => l?.handle === text);
 
   const ctrlPress = useKeyPress("Control");
   const metaPress = useKeyPress("Meta");
@@ -51,6 +51,7 @@ export const Handle = ({ text: leafText, children, inline, ...props }: any) => {
     <Preview
       handle={text}
       hide={inline}
+      //@ts-ignore
       previewContent={handlePreview?.previewContent || undefined}
     >
       <HandleStyled

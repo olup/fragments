@@ -2,15 +2,33 @@ import { ApolloProvider } from "@apollo/client";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { ThemeProvider } from "@emotion/react";
 import { useAppStore } from "contexts/appStore";
+import { useEngine } from "contexts/engine";
 import { GlobalStyles } from "GlobalStyles";
 import { useInitializeApolloClient } from "libs/apollo";
-import React from "react";
+import { buildIndex } from "libs/engine";
+import { github } from "libs/github";
+import React, { useEffect } from "react";
+import { useIdleTimer } from "react-idle-timer";
 import { darkTheme, lightTheme } from "theme";
 import { MainRouter } from "./MainRouter";
 
 const AuthorizedApp = () => {
   const { getAccessTokenSilently } = useAuth0();
   const { client } = useInitializeApolloClient(getAccessTokenSilently);
+  const reset = useEngine((s) => s.actions.reset);
+
+  useIdleTimer({
+    timeout: 5 * 1000,
+    onIdle: () => {
+      github.commitStaged();
+    },
+  });
+
+  useEffect(() => {
+    github.getFragmentsContent().then((fragments) => {
+      reset(buildIndex(fragments));
+    });
+  }, []);
 
   return (
     <ApolloProvider client={client}>
