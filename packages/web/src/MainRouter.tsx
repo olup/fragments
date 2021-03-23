@@ -1,36 +1,49 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { Body, Container, Flex, Main } from "components/Layout";
-import { Loading } from "components/Loading";
+import { Body, Container, Main } from "components/Layout";
 import { OptionBar } from "components/OptionBar";
 import { Side } from "components/Side";
 import { useAppStore } from "contexts/appStore";
+import { useAuth } from "hooks/useAuth";
 import { useTypeWriterPos } from "hooks/useTypewriterPos";
 import { Feed } from "pages/Feed";
 import { FragmentPage } from "pages/FragmentPage";
 import { Home } from "pages/Home";
+import { LoginPage } from "pages/LoginPage";
+import { SettingsPage } from "pages/SettingsPage";
 import { TagPage } from "pages/TagPage";
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 
 export const MainRouter = () => {
-  const { loginWithRedirect, isLoading, isAuthenticated } = useAuth0();
-
   const useTypewriterScroll = useAppStore((s) => s.useTypewriterMode);
-
   useTypeWriterPos(useTypewriterScroll);
+  const { isLoggedIn, isLoading } = useAuth();
+  const { repo } = useAppStore();
 
-  if (isLoading)
+  if (isLoading) return null;
+
+  if (!isLoggedIn) {
     return (
-      <Main>
-        <Flex justify="center" align="center">
-          <Loading />
-        </Flex>
-      </Main>
+      <Router>
+        <Routes>
+          <Route path="*" element={<LoginPage />}></Route>
+        </Routes>
+      </Router>
     );
+  }
 
-  if (!isAuthenticated) {
-    loginWithRedirect();
-    return <Main></Main>;
+  if (!repo) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="*" element={<SettingsPage />}></Route>
+        </Routes>
+      </Router>
+    );
   }
 
   return (

@@ -1,11 +1,8 @@
 import { useEngine } from "contexts/engine";
-import { useSaveFragmentMutation } from "graphql/generated";
 import getHumanId from "human-id";
-import { deleteFragment } from "libs/github";
 import { useCallback, useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useNavigate } from "react-router-dom";
-import { FragmentDisplayType } from "types";
 import { useDebouncedCallback } from "use-debounce/lib";
 import { FragmentProps } from "./index";
 export const useLogic = ({
@@ -82,7 +79,7 @@ export const useLogic = ({
     if (e.ctrlKey || e.metaKey) navigate("/handle/" + e.currentTarget.value);
   };
 
-  // const hasBackLinks = !!fragment?.linkedBy?.length;
+  const hasBackLinks = !!fragment?.linkedBy?.length;
 
   const handleBlur = async () => {
     if (saveOnBlur) await onSave();
@@ -104,7 +101,7 @@ export const useLogic = ({
     handleBlur,
     setShowCount,
     showCount,
-    //hasBackLinks,
+    hasBackLinks,
     useSpellCheck,
     handle,
     w,

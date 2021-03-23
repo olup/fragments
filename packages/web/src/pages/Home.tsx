@@ -1,12 +1,7 @@
 import { Fragment } from "components/Fragment";
 import { Flex } from "components/Layout";
-import { Loading } from "components/Loading";
 import { NewFragment } from "components/NewFragment";
 import { useEngine } from "contexts/engine";
-import {
-  useDeleteFragmentMutation,
-  useGetFragmentsQuery,
-} from "graphql/generated";
 
 export const Home = () => {
   const fragment = useEngine((s) => s.actions.getRandomFragment());

@@ -12,6 +12,7 @@ const NewBlock = styled.div`
   font-style: italic;
   color: #ccc;
   font-size: 20px;
+  background-color: #fff;
   cursor: text;
 `;
 

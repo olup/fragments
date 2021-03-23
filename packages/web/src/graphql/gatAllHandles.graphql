@@ -1,7 +1,0 @@
-query getFragmentsHandle {
-  fragments {
-    uuid
-    handle
-    previewContent
-  }
-}

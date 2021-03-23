@@ -1,5 +1,5 @@
+import { Flex } from "@chakra-ui/layout";
 import styled from "@emotion/styled/macro";
-import { Flex } from "components/Layout";
 import AutosizeInput from "react-input-autosize";
 
 export const Info = styled(Flex)`
@@ -11,8 +11,8 @@ export const Info = styled(Flex)`
 export const HideOut = styled.div``;
 export const FragmentStyled = styled.div`
   padding: 20px 30px;
-  background-color: ${(p) => p.theme.colors.fragmentBackgroundColor};
-  color: ${(p) => p.theme.colors.textColor};
+  background-color: white;
+  color: #222;
   width: 100%;
   box-sizing: border-box;
   box-shadow: 7px 7px 0px 0px #00000008;
@@ -49,8 +49,14 @@ export const HandleInput = styled(AutosizeInput)`
 
 export const BackLinksLine = styled(Flex)`
   font-size: 20px;
-  color: #ccc;
+  align-items: center;
   svg {
+    color: #ccc;
     margin-right: 10px;
   }
+`;
+
+export const MenuIcon = styled(Flex)`
+  height: 20px;
+  width: 20px;
 `;

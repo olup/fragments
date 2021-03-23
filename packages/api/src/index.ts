@@ -1,65 +1,32 @@
-require('dotenv').config()
+import { tokenHandler } from "./token";
+import { getStore, setStore } from "./store";
+import { match } from "path-to-regexp";
 
-import { ApolloServer } from 'apollo-server-express'
-import express from 'express'
-import { schema } from './makeSchema'
-import { createContext } from './context'
-import cors from 'cors'
-import morgan from 'morgan'
+addEventListener("fetch", (event) => {
+  const response = router(event.request).then((r) => {
+    r.headers.set("Access-Control-Allow-Origin", "*");
+    r.headers.set("content-type", "application/json;charset=UTF-8");
+    r.headers.set("Access-Control-Allow-Headers", "*");
+    r.headers.set("Access-Control-Allow-Methods", "*");
+    return r;
+  });
 
-import jwt from 'express-jwt'
-import jwks from 'jwks-rsa'
-import { connect, DbFragment, DbUser } from './db'
-import { nanoid } from 'nanoid'
-import { initializeUser } from './flow/initialize'
+  event.respondWith(response);
+});
 
-var port = process.env.PORT || 10000
+const router = async (request: Request): Promise<Response> => {
+  const routes = {
+    "GET /token": tokenHandler,
+    "GET /settings": getStore,
+    "PUT /settings": setStore,
+    "GET /foo": () => new Response("foo"),
+  };
 
-var jwtCheck = jwt({
-  secret: jwks.expressJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: 'https://fragment-app.eu.auth0.com/.well-known/jwks.json',
-  }),
-  credentialsRequired: false,
-  audience: 'https://fragment.ml',
-  issuer: 'https://fragment-app.eu.auth0.com/',
-  algorithms: ['RS256'],
-})
+  for (const [route, handler] of Object.entries(routes)) {
+    const [method, url] = route.split(" ");
+    const normalUrl = "/" + request.url.split("/")[3].split("?")[0] || "";
+    if (request.method === method && url === normalUrl) return handler(request);
+  }
 
-connect().then(() => {
-  const app = express()
-
-  app.use(morgan('tiny'))
-  app.use(cors())
-
-  app.get('/healthcheck', (req, res) => {
-    return res.status(200).send('ok')
-  })
-
-  app.use(jwtCheck)
-  app.use(async (req, res, next) => {
-    //@ts-ignore
-    const email = req.user?.['https://fragment.ml/email'] as string | undefined
-    if (email) {
-      let user = await DbUser.findOne({ email })
-      if (!user) user = await initializeUser(email)
-      //@ts-ignore
-      req.user = user
-    }
-    next()
-  })
-
-  const apolloServer = new ApolloServer({
-    schema,
-    context: createContext,
-    introspection: true,
-    playground: true,
-  })
-
-  apolloServer.applyMiddleware({ app: app })
-
-  app.listen(port)
-  console.log(`server started on port ${port}`)
-})
+  return new Response("Not found");
+};

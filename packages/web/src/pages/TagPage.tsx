@@ -1,23 +1,14 @@
+import { Box } from "@chakra-ui/layout";
 import styled from "@emotion/styled";
 import { Fragment } from "components/Fragment";
 import { Flex } from "components/Layout";
 import { Link } from "components/Link";
-import { Loading } from "components/Loading";
 import { NewFragment } from "components/NewFragment";
 import { useEngine } from "contexts/engine";
-import {
-  useDeleteFragmentMutation,
-  useGetFragmentsQuery,
-  useGetTagsQuery,
-} from "graphql/generated";
 import useStickyHeader from "hooks/useStickyHeader";
 import React, { useMemo } from "react";
 import { HiHashtag } from "react-icons/hi";
 import { Link as RouterLink, useParams } from "react-router-dom";
-
-const SubTagsBlock = styled.div`
-  margin: 10px 0;
-`;
 
 const Header = styled.div`
   padding: 20px 0;
@@ -25,7 +16,7 @@ const Header = styled.div`
 
 const HiddenHeader = styled.div`
   width: 100%;
-  background-color: ${(p) => p.theme.colors.pageBackgroundColor};
+  background-color: #eee;
   top: -100px;
   position: fixed;
   z-index: 10;
@@ -47,14 +38,15 @@ export const TagPage = () => {
   ]);
 
   return (
-    <Flex col key={tagName} mb={20}>
+    <Box>
       <HiddenHeader className={isSticky ? "sticky" : ""}>
         <Header>
           <RouterLink to="/">
             <Link>Back home</Link>
           </RouterLink>
           <Flex
-            mt={10}
+            mt={2}
+            align="center"
             style={{
               color: "#bbb",
               fontSize: 25,
@@ -70,7 +62,8 @@ export const TagPage = () => {
           <Link>Back home</Link>
         </RouterLink>
         <Flex
-          mt={10}
+          mt={2}
+          align="center"
           style={{
             color: "#bbb",
             fontSize: 40,
@@ -112,6 +105,6 @@ export const TagPage = () => {
         initialContent={`\n#${tagName}`}
         placeholder="Add a note to this list"
       />
-    </Flex>
+    </Box>
   );
 };

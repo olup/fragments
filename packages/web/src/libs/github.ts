@@ -31,8 +31,8 @@ export class GithubManager {
   repo = "";
   owner = "";
   accessToken = "";
-  gqlClient: GraphQLClient;
-  git: Octokit["git"];
+  gqlClient: GraphQLClient | null = null;
+  ok: Octokit | null = null;
 
   isCommiting = false;
   hasStagedElements = false;
@@ -44,17 +44,7 @@ export class GithubManager {
     toDelete: [],
     toUpsert: [],
   };
-  constructor({
-    repo,
-    owner,
-    accessToken,
-  }: {
-    repo: string;
-    owner: string;
-    accessToken: string;
-  }) {
-    this.repo = repo;
-    this.owner = owner;
+  async init(accessToken: string) {
     this.accessToken = accessToken;
 
     this.gqlClient = new GraphQLClient("https://api.github.com/graphql", {
@@ -63,9 +53,13 @@ export class GithubManager {
       },
     });
 
-    this.git = new Octokit({
+    this.ok = new Octokit({
       auth: this.accessToken,
-    }).git;
+    });
+  }
+  setRepo(ownerName: string, repoName: string) {
+    this.owner = ownerName;
+    this.repo = repoName;
   }
 
   stageDelete(handle: string) {
@@ -88,6 +82,7 @@ export class GithubManager {
     message = ""
   ) {
     if (!toDelete.length && !toUpsert.length) return;
+    if (!this.ok) return;
     const commonParams = { owner: this.owner, repo: this.repo };
 
     const toDeletePath = toDelete.map((handle) => `fragments/${handle}.md`);
@@ -101,15 +96,15 @@ export class GithubManager {
       "path"
     );
 
-    const head = await this.git.getRef({
+    const head = await this.ok.git.getRef({
       ...commonParams,
       ref: "heads/main",
     });
-    const lastCommit = await this.git.getCommit({
+    const lastCommit = await this.ok.git.getCommit({
       ...commonParams,
       commit_sha: head.data.object.sha,
     });
-    const lastTree = await this.git.getTree({
+    const lastTree = await this.ok.git.getTree({
       ...commonParams,
       tree_sha: lastCommit.data.tree.sha,
       recursive: "true",
@@ -129,19 +124,19 @@ export class GithubManager {
       ...toUpsertByPath,
     };
 
-    const newTree = await this.git.createTree({
+    const newTree = await this.ok.git.createTree({
       ...commonParams,
       tree: Object.values(withWithUpsertsByPath),
     });
 
-    const newCommit = await this.git.createCommit({
+    const newCommit = await this.ok.git.createCommit({
       ...commonParams,
       tree: newTree.data.sha,
       message,
       parents: [lastCommit.data.sha],
     });
 
-    await this.git.updateRef({
+    await this.ok.git.updateRef({
       ...commonParams,
       ref: "heads/main",
       sha: newCommit.data.sha,
@@ -156,10 +151,10 @@ export class GithubManager {
 
     this.isCommiting = true;
     // commit the updates
-    // await this.commit(
-    //   this.queue,
-    //   message || format(new Date(), "yyyy-MM-dd hh:mm:ss")
-    // );
+    await this.commit(
+      this.queue,
+      message || format(new Date(), "yyyy-MM-dd hh:mm:ss")
+    );
 
     console.log("Commited");
 
@@ -171,22 +166,26 @@ export class GithubManager {
   }
 
   async getFragmentsContent(): Promise<ElementaryFragment[]> {
+    if (!this.gqlClient) throw new Error("Gql client is not initialized");
     const result = await this.gqlClient.request(query, {
       owner: this.owner,
       repo: this.repo,
     });
 
-    const fragments = result.repository.object.entries.map((e: any) => ({
-      handle: e.name.replace(".md", ""),
-      content: e.object.text,
-    }));
+    const fragments =
+      result?.repository?.object?.entries?.map((e: any) => ({
+        handle: e.name.replace(".md", ""),
+        content: e.object.text,
+      })) || [];
 
     return fragments;
   }
+
+  async initRepo(name: string) {
+    this.ok?.repos.createUsingTemplate({
+      name,
+    });
+  }
 }
 
-export const github = new GithubManager({
-  accessToken: "88cf0d680f2ce5df0b41f139618f6aeb829b0bca",
-  repo: "my-fragment",
-  owner: "olup",
-});
+export const github = new GithubManager();

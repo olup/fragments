@@ -1,3 +1,0 @@
-mutation deleteFragment($uuid: ID!) {
-  done: deleteFragment(uuid: $uuid)
-}

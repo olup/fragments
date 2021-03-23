@@ -18,6 +18,7 @@ export const LEAF_REGEX = {
   "\\*\\*(.*)\\*\\*": "bold",
 
   "\\B(@[a-zA-Z-]+\\b)(?!;)": "handle",
+  "\\[\\[(.*?)\\]\\]": "handle",
   "\\B(@[a-zA-Z-]+:inline\\b)(?!;)": "inlineHandle",
   "\\B(#[a-zA-Z-]+\\b)(?!;)": "hashtag",
   "(https?|ftp|ssh|mailto)://[a-z0-9/:%_+.,#?!@&=-]+": "url",

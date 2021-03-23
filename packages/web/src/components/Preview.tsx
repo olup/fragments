@@ -17,8 +17,8 @@ const PreviewStyled = styled.div`
   div.content {
     //border-radius: 5px;
     border: 1px solid #dfdfdf;
-    color: ${(p) => p.theme.colors.textColor};
-    background-color: ${(p) => p.theme.colors.fragmentBackgroundColor};
+    color: #222;
+    background-color: white;
     box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.1);
     padding: 10px;
     font-size: 14px;

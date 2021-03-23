@@ -1,35 +1,19 @@
 import { Fragment } from "components/Fragment";
 import { Flex } from "components/Layout";
 import { Link } from "components/Link";
-import { Loading } from "components/Loading";
-import {
-  useDeleteFragmentMutation,
-  useGetFragmentByHandleQuery,
-} from "graphql/generated";
+import { useEngine } from "contexts/engine";
 import React from "react";
-import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
+import { Link as RouterLink, useParams } from "react-router-dom";
 
 export const FragmentPage = () => {
-  const navigate = useNavigate();
   const { handle } = useParams();
 
-  const { data, loading } = useGetFragmentByHandleQuery({
-    variables: { handle },
-    fetchPolicy: "cache-and-network",
-  });
+  const fragment = useEngine((s) => s.engine.fragments[handle]);
+  const deleteFragment = useEngine((s) => s.actions.deleteFragment);
 
-  const fragment = data?.fragmentByHandle;
-
-  const [deleteFragment] = useDeleteFragmentMutation();
-  const onDelete = () => {
-    if (fragment?.uuid) deleteFragment({ variables: { uuid: fragment?.uuid } });
-    navigate("/");
-  };
   const onHandleChange = (newHandle: string) => {
     window.history.pushState(undefined, "", newHandle);
   };
-
-  const showLoader = loading && !fragment;
 
   return (
     <>
@@ -39,29 +23,21 @@ export const FragmentPage = () => {
         </RouterLink>
       </Flex>
 
-      {showLoader && (
-        <Flex justify="center" mt={50}>
-          <Loading />
-        </Flex>
-      )}
-
-      {!showLoader && (
-        <Fragment
-          fragment={
-            fragment || {
-              handle,
-              content: "",
-              linksTo: [],
-              linkedBy: [],
-              tags: [],
-            }
+      <Fragment
+        fragment={
+          fragment || {
+            handle,
+            content: "",
+            linksTo: [],
+            linkedBy: [],
+            tags: [],
           }
-          key={fragment?.handle}
-          onHandleChange={onHandleChange}
-          onDelete={onDelete}
-          saveOnBlur
-        />
-      )}
+        }
+        key={fragment?.handle}
+        onHandleChange={onHandleChange}
+        onDelete={() => deleteFragment(fragment.handle)}
+        saveOnBlur
+      />
     </>
   );
 };

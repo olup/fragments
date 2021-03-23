@@ -1,32 +1,18 @@
-import React from "react";
-import {
-  useGetFragmentByHandleQuery,
-  useSaveFragmentMutation,
-} from "graphql/generated";
-import { FC, Fragment } from "react";
+import { useEngine } from "contexts/engine";
+import React, { FC } from "react";
 import { Editor } from "./Editor";
-import { useState } from "react";
 
 export const InlineEditor: FC<{ handle?: string }> = ({ handle = "" }) => {
-  const { data, loading } = useGetFragmentByHandleQuery({
-    variables: { handle },
-    fetchPolicy: "cache-and-network",
-  });
-  const fragment = data?.fragmentByHandle;
-  const [save] = useSaveFragmentMutation();
+  const fragment = useEngine((s) => s.engine.fragments[handle]);
+  const updateFragment = useEngine((s) => s.actions.updateFragment);
 
   const onSave = (content: string) => {
-    if (loading) return;
-    save({
-      variables: {
-        fragment: { uuid: fragment?.uuid, handle, content },
-      },
-    });
+    updateFragment({ handle, content });
   };
 
   return (
     <Editor
-      key={fragment?.uuid}
+      key={fragment?.handle}
       initialValue={fragment?.content || ""}
       onSave={onSave}
       autoSave

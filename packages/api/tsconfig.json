@@ -1,20 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "es2017"
-    ],
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "module": "commonjs",
+    "target": "esnext",
+    "lib": ["esnext", "webworker"],
+    "alwaysStrict": true,
     "strict": true,
+    "preserveConstEnums": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "outDir": "dist",
-    "baseUrl": "src"
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "types": ["@cloudflare/workers-types"]
   },
   "include": [
-    "src"
-  ]
+    "./src/*.ts",
+    "./test/*.ts",
+    "./src/**/*.ts",
+    "./test/**/*.ts",
+    "./node_modules/@cloudflare/workers-types/index.d.ts"
+  ],
+  "exclude": ["node_modules/", "dist/"]
 }

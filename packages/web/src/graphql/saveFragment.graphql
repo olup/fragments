@@ -1,7 +1,0 @@
-mutation saveFragment($fragment: FragmentInput!) {
-  fragment: saveFragment(fragment: $fragment) {
-    uuid
-    content
-    handle
-  }
-}

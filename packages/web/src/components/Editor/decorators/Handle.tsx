@@ -7,6 +7,7 @@ import { Link } from "components/Link";
 import { Link as RouterLink } from "react-router-dom";
 import { useKeyPress } from "hooks/useKeyPress";
 import { Preview } from "components/Preview";
+import { useEngine } from "contexts/engine";
 
 const HandleStyled = styled.span<{
   exists?: boolean;
@@ -38,9 +39,15 @@ const HandleStyled = styled.span<{
 
 export const Handle = ({ text: leafText, children, inline, ...props }: any) => {
   const navigate = useNavigate();
-  const text = leafText?.slice(1) || "";
-  const fragment = useFragmentContext();
-  const handlePreview = undefined; //fragment?.linksTo?.find((l) => l?.handle === text);
+
+  // we have two types of handles
+  const text =
+    leafText[0] === "@"
+      ? leafText?.slice(1) || ""
+      : leafText?.slice(2, -2) || "";
+
+  const linkedFragment = useEngine((s) => s.engine.fragments[text]);
+  const previewContent = linkedFragment?.content.slice(0, 20);
 
   const ctrlPress = useKeyPress("Control");
   const metaPress = useKeyPress("Meta");
@@ -48,16 +55,11 @@ export const Handle = ({ text: leafText, children, inline, ...props }: any) => {
   const showAsLink = ctrlPress || metaPress;
 
   return (
-    <Preview
-      handle={text}
-      hide={inline}
-      //@ts-ignore
-      previewContent={handlePreview?.previewContent || undefined}
-    >
+    <Preview handle={text} hide={inline} previewContent={previewContent}>
       <HandleStyled
         {...props}
         inline={inline}
-        exists={!!handlePreview}
+        exists={!!linkedFragment}
         showAsLink={showAsLink}
         onClick={(e) => (e.ctrlKey || e.metaKey) && navigate("/handle/" + text)}
       >

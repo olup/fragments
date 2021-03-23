@@ -1,3 +1,4 @@
+import { extendTheme } from "@chakra-ui/react";
 export const lightTheme = {
   colors: {
     textColor: "#222",
@@ -13,3 +14,32 @@ export const darkTheme: typeof lightTheme = {
     pageBackgroundColor: "#222",
   },
 };
+
+export const theme = extendTheme({
+  fonts: {
+    heading: "Inconsolata",
+    body: "Inconsolata",
+  },
+
+  components: {
+    Button: {
+      defaultProps: {
+        variant: "outline",
+        colorScheme: "black",
+      },
+      variants: {
+        ghost: {
+          borderBottomWidth: 0,
+        },
+      },
+      baseStyle: {
+        borderRadius: 5,
+        transition: 0,
+        borderBottomWidth: 3,
+        _active: {
+          borderBottomWidth: 1,
+        },
+      },
+    },
+  },
+});
