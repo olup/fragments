@@ -4,7 +4,7 @@
   "description": "Cloudflare worker TypeScript template",
   "main": "index.js",
   "scripts": {
-    "build": "netlify-lambda build src"
+    "build": "tsc"
   },
   "author": "author",
   "license": "MIT OR Apache-2.0",
