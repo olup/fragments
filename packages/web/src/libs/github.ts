@@ -43,6 +43,15 @@ export const createGithubKit = async (token: string) => {
       headers: { authorization: "token " + token },
     }).then((r) => r.json());
 
+  const createRepo = async (name = "my-fragments") =>
+    (
+      await ok.repos.createForAuthenticatedUser({
+        name,
+        auto_init: true,
+        private: true,
+      })
+    ).data;
+
   const initRepo = (repo: string, owner: string) => {
     let isCommiting = false;
     let hasStagedElements = false;
@@ -127,14 +136,14 @@ export const createGithubKit = async (token: string) => {
         lastTreeEntryFileListByPath,
         toDeletePath
       );
-      const withWithUpsertsByPath = {
+      const withUpsertsByPath = {
         ...filesWithoutDeletesByPath,
         ...toUpsertByPath,
       };
 
       const newTree = await ok.git.createTree({
         ...commonParams,
-        tree: Object.values(withWithUpsertsByPath),
+        tree: Object.values(withUpsertsByPath),
       });
 
       const newCommit = await ok.git.createCommit({
@@ -181,7 +190,7 @@ export const createGithubKit = async (token: string) => {
     };
   };
 
-  return { initRepo, listRepo };
+  return { initRepo, listRepo, createRepo };
 };
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (

@@ -11,6 +11,7 @@ import { HiPlus, HiPlusCircle } from "react-icons/hi";
 export const SettingsPage = () => {
   const { token } = useAuth();
   const [repos, setRepos] = useState<{ name: string; owner: any }[]>([]);
+  const [newRepoName, setNewRepoName] = useState("");
   const { set } = useAppStore();
   const { github } = useGithubContext();
 
@@ -19,6 +20,17 @@ export const SettingsPage = () => {
   }, [github]);
 
   const setSettings = async (repo: { name: string; owner: any }) => {
+    set({
+      repo: {
+        name: repo.name,
+        owner: repo.owner.login,
+      },
+    });
+  };
+
+  const onCreateRepo = async () => {
+    const repo = await github?.createRepo(newRepoName);
+    if (!repo || !repo.owner) return;
     set({
       repo: {
         name: repo.name,
@@ -37,8 +49,17 @@ export const SettingsPage = () => {
         </Text>
         <Text mb={5}>You can either create a new one :</Text>
         <Flex mb={5}>
-          <Input placeholder="Repository name" mr={2} />
-          <Button leftIcon={<HiPlus />} variant="outlineRaised">
+          <Input
+            placeholder="Repository name"
+            mr={2}
+            value={newRepoName}
+            onChange={(e) => setNewRepoName(e.target.value)}
+          />
+          <Button
+            leftIcon={<HiPlus />}
+            variant="outlineRaised"
+            onClick={onCreateRepo}
+          >
             Create
           </Button>
         </Flex>
