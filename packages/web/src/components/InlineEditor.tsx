@@ -7,7 +7,7 @@ export const InlineEditor: FC<{ handle?: string }> = ({ handle = "" }) => {
   const updateFragment = useEngine((s) => s.actions.updateFragment);
 
   const onSave = (content: string) => {
-    updateFragment({ handle, content });
+    // updateFragment({ handle, content });
   };
 
   return (

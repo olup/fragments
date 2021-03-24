@@ -163,7 +163,7 @@ export const Side: FC = () => {
 
               <Title as={SideLink}>Tags</Title>
               {tags?.map((tag) => (
-                <Link to={"/tag/" + tag}>
+                <Link to={"/tag/" + tag} key={tag}>
                   <SideLink key={tag}>
                     <HiHashtag size={20} style={{ marginRight: 10 }} />
                     {tag}

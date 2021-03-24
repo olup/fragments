@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/rest";
 import { format } from "date-fns";
 import { gql, GraphQLClient } from "graphql-request";
-import { keyBy, omit } from "lodash";
+import { debounce, keyBy, omit } from "lodash";
 
 export type ElementaryFragment = {
   handle: string;
@@ -52,7 +52,7 @@ export const createGithubKit = async (token: string) => {
       })
     ).data;
 
-  const initRepo = (repo: string, owner: string) => {
+  const initRepo = (repo: string, owner: string, autoSave?: boolean) => {
     let isCommiting = false;
     let hasStagedElements = false;
 
@@ -82,10 +82,12 @@ export const createGithubKit = async (token: string) => {
     const stageDelete = (handle: string) => {
       hasStagedElements = true;
       queue.toDelete?.push(handle);
+      if (autoSave) debouncedCommitStaged();
     };
     const stageUpsert = (fragment: ElementaryFragment) => {
       hasStagedElements = true;
       queue.toUpsert?.push(fragment);
+      if (autoSave) debouncedCommitStaged();
     };
 
     const commit = async (
@@ -178,6 +180,11 @@ export const createGithubKit = async (token: string) => {
       queue.toUpsert = [];
       hasStagedElements = false;
     };
+
+    const debouncedCommitStaged = debounce(commitStaged, 1000 * 5, {
+      leading: false,
+      trailing: true,
+    });
 
     return {
       getAllFragments,

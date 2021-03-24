@@ -12,9 +12,9 @@ export const useGithub = () => {
     setGithub(await createGithubKit(token));
   };
 
-  const initRepo = async (name: string, owner: string) => {
+  const initRepo = async (name: string, owner: string, autoSave?: boolean) => {
     if (!github) return;
-    const repo = await github.initRepo(name, owner);
+    const repo = await github.initRepo(name, owner, autoSave);
     setRepo(repo);
     setEnginRepo(repo);
   };

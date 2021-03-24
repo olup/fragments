@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { useState } from "react";
 import { Fragment } from "./Fragment";
 import OutsideClickHandler from "react-outside-click-handler";
@@ -24,7 +24,7 @@ const NewBlock: FC<BoxProps> = (props) => {
 
 export const NewFragment: FC<{
   onOutsideClick?: () => any;
-  placeholder?: string;
+  placeholder?: ReactNode;
   initialContent?: string;
 }> = ({
   onOutsideClick,

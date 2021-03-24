@@ -127,7 +127,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
           <BackLinksLine mt={5}>
             <HiOutlineLink size={18} />
             {linkedBy?.map((link) => (
-              <Flex mr={2}>
+              <Flex mr={2} key={link.handle}>
                 <Preview
                   handle={link.handle}
                   previewContent={link.content.slice(20)}

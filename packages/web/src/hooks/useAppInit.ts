@@ -1,6 +1,6 @@
-import { buildIndex } from "libs/engine";
+import { build, FragmentFromFile } from "libs/engine";
+import { ElementaryFragment } from "libs/github";
 import { useEffect } from "react";
-import { useIdleTimer } from "react-idle-timer";
 import { useAppStore } from "./appStore";
 import { useEngine } from "./engine";
 import { useAuth } from "./useAuth";
@@ -17,13 +17,6 @@ export const useAppInit = () => {
     github,
   } = useGithubContext();
 
-  useIdleTimer({
-    timeout: 5 * 1000,
-    onIdle: () => {
-      if (githubRepo) githubRepo.commitStaged();
-    },
-  });
-
   useEffect(() => {
     if (token) {
       initGithub(token);
@@ -32,7 +25,7 @@ export const useAppInit = () => {
 
   useEffect(() => {
     if (repo && github) {
-      initRepo(repo.name, repo.owner);
+      initRepo(repo.name, repo.owner, true);
     }
   }, [github, repo]);
 
@@ -40,7 +33,9 @@ export const useAppInit = () => {
     if (githubRepo) {
       githubRepo
         .getAllFragments()
-        .then((fragments: any) => reset(buildIndex(fragments)));
+        .then((fragments: ElementaryFragment[]) =>
+          reset(build(fragments.map((f) => FragmentFromFile(f))))
+        );
     }
   }, [githubRepo]);
 

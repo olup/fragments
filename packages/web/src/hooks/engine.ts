@@ -1,8 +1,8 @@
-import { buildIndex, Engine, Fragment } from "libs/engine";
+import { build, Engine, Fragment, fragmentToFile } from "libs/engine";
 import { pick } from "lodash";
 import create from "zustand";
 import { devtools } from "zustand/middleware";
-import { ElementaryFragment, Repo } from "../libs/github";
+import { Repo } from "../libs/github";
 
 export const useEngine = create<{
   engine: Engine;
@@ -11,7 +11,7 @@ export const useEngine = create<{
     reset: (engine: Engine) => void;
     getRandomFragment: () => Fragment;
     getFragments: (handles: string[]) => Fragment[];
-    updateFragment: (fragment: ElementaryFragment) => Promise<Fragment>;
+    updateFragment: (fragment: Fragment) => Promise<Fragment>;
     deleteFragment: (handle: string) => Promise<boolean>;
     searchFragment: (searchString: string) => Fragment[];
     getTag: (
@@ -40,16 +40,13 @@ export const useEngine = create<{
       },
       getFragments: (handles: string[]) =>
         Object.values(pick(get().engine.fragments, handles)),
-      updateFragment: async (fragment: ElementaryFragment) => {
-        get().repo?.stageUpsert(fragment);
+      updateFragment: async (fragment: Fragment) => {
+        get().repo?.stageUpsert(fragmentToFile(fragment));
 
-        const fragments: Record<string, ElementaryFragment> = get().engine
-          .fragments;
+        const fragments: Record<string, Fragment> = get().engine.fragments;
 
         get().actions.reset(
-          buildIndex(
-            Object.values({ ...fragments, [fragment.handle]: fragment })
-          )
+          build(Object.values({ ...fragments, [fragment.handle]: fragment }))
         );
         return get().engine.fragments[fragment.handle];
       },
@@ -64,7 +61,7 @@ export const useEngine = create<{
 
         if (fragment) {
           get().actions.reset(
-            buildIndex(
+            build(
               Object.values(get().engine.fragments).filter(
                 (f) => f.handle !== handle
               )

@@ -1,7 +1,7 @@
-import { Box } from "@chakra-ui/layout";
+import { Box, Center } from "@chakra-ui/layout";
 import styled from "@emotion/styled";
 import { Fragment } from "components/Fragment";
-import { Flex } from "components/Layout";
+import { Container, Flex } from "components/Layout";
 import { Link } from "components/Link";
 import { NewFragment } from "components/NewFragment";
 import { useEngine } from "hooks/engine";
@@ -9,6 +9,8 @@ import useStickyHeader from "hooks/useStickyHeader";
 import React, { useMemo } from "react";
 import { HiHashtag } from "react-icons/hi";
 import { Link as RouterLink, useParams } from "react-router-dom";
+import { MdCreate } from "react-icons/md";
+import Icon from "@chakra-ui/icon";
 
 const Header = styled.div`
   padding: 20px 0;
@@ -16,10 +18,12 @@ const Header = styled.div`
 
 const HiddenHeader = styled.div`
   // width: 100%;
-  background-color: inherit;
+  background-color: #fff;
   top: -150px;
+  left: 0;
   position: fixed;
   z-index: 10;
+  width: 100%;
   transition: 0.3s;
   &.sticky {
     top: 0;
@@ -28,7 +32,7 @@ const HiddenHeader = styled.div`
 
 export const TagPage = () => {
   const { tag: tagName } = useParams();
-  const [isSticky] = useStickyHeader(250);
+  const [isSticky] = useStickyHeader(200);
 
   const tag = useEngine((s) => s.engine.tags[tagName]);
   const getFragments = useEngine((s) => s.actions.getFragments);
@@ -40,14 +44,18 @@ export const TagPage = () => {
   return (
     <Box position="relative">
       <HiddenHeader className={isSticky ? "sticky" : ""}>
-        <Header>
-          <RouterLink to="/">
-            <Link>Back home</Link>
-          </RouterLink>
-          <Flex mt={2} align="center" color="#bbb" fontSize={25}>
-            <HiHashtag /> {tagName}
-          </Flex>
-        </Header>
+        <Center>
+          <Box w={1000}>
+            <Header>
+              <RouterLink to="/">
+                <Link>Back home</Link>
+              </RouterLink>
+              <Flex mt={2} align="center" color="#bbb" fontSize={25}>
+                <HiHashtag /> {tagName}
+              </Flex>
+            </Header>
+          </Box>
+        </Center>
       </HiddenHeader>
 
       <Header>
@@ -96,7 +104,11 @@ export const TagPage = () => {
 
       <NewFragment
         initialContent={`\n#${tagName}`}
-        placeholder="Add a note to this list"
+        placeholder={
+          <Flex align="center">
+            <Icon as={MdCreate} mr={3} /> Add note to the list
+          </Flex>
+        }
       />
     </Box>
   );

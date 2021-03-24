@@ -1,10 +1,12 @@
 import { useEngine } from "hooks/engine";
 import getHumanId from "human-id";
+import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useNavigate } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce/lib";
 import { FragmentProps } from "./index";
+import { defaultFragment } from "libs/engine";
 export const useLogic = ({
   fragment,
   autoFocus,
@@ -30,9 +32,7 @@ export const useLogic = ({
         capitalize: false,
       })
   );
-  const [uuid, setUuid] = useState<string | undefined>(
-    fragment?.handle || undefined
-  );
+
   const [content, setContent] = useState<string>(
     fragment?.content || initialContent || ""
   );
@@ -45,12 +45,19 @@ export const useLogic = ({
   const saveFragment = useEngine((s) => s.actions.updateFragment);
 
   const onSave = useCallback(async () => {
-    if ((!uuid && !content) || !isDirty) return;
-    const result = await saveFragment({ handle, content });
+    if (!content || !isDirty) return;
+    const newFragment = {
+      ...defaultFragment, // initial zero values
+      ...(fragment || {}), // previous fragment, if exists
+      handle,
+      content,
+      updatedAt: format(new Date(), "yyyy-MM-dd"),
+    };
+    const result = await saveFragment(newFragment);
 
     setIsDirty(false);
     return result;
-  }, [isDirty, uuid, content, handle, saveFragment]);
+  }, [isDirty, content, handle, saveFragment]);
 
   const debouncedSave = useDebouncedCallback(async () => {
     onSave();
@@ -106,6 +113,5 @@ export const useLogic = ({
     handle,
     w,
     c,
-    uuid,
   };
 };
