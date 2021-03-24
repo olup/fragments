@@ -1,5 +1,4 @@
 const { GITHUB_CLIENT_SECRET, GITHUB_CLIENT_ID } = process.env;
-console.log(GITHUB_CLIENT_SECRET, GITHUB_CLIENT_ID);
 
 import { APIGatewayEvent, Context } from "aws-lambda";
 import fetch from "node-fetch";

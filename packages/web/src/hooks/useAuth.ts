@@ -69,7 +69,7 @@ export const useAuth = () => {
   const login = () => {
     const arr = window.location.href.split("/");
     const redirectUrl = arr[0] + "//" + arr[2];
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=05fa4022a4caddc8e0fc&response_type=code&redirect_uri=${redirectUrl}&scope=repo user`;
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&response_type=code&redirect_uri=${redirectUrl}&scope=repo user`;
   };
 
   const getUser = (token: string) =>
