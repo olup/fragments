@@ -116,9 +116,9 @@ export const Fragment: FC<FragmentProps> = (props) => {
                 </Info> */}
               <Expander />
               {showCount && (
-                <Info>
+                <Box opacity={0.3}>
                   c {c} w {w}
-                </Info>
+                </Box>
               )}
             </Flex>
           </HideOut>

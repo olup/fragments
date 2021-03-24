@@ -44,5 +44,28 @@ export const theme = extendTheme({
         borderRadius: 5,
       },
     },
+
+    Menu: {
+      parts: ["list", "item"],
+      baseStyle: {
+        list: {
+          paddingBottom: 0,
+          py: 0,
+          borderColor: "#ccc",
+          overflow: "hidden",
+          borderRadius: 2,
+        },
+        item: {
+          borderBottomWidth: 1,
+          borderColor: "#f2f2f2",
+          _hover: {
+            backgroundColor: "#f9f9f9",
+          },
+          _focus: {
+            backgroundColor: "#f9f9f9",
+          },
+        },
+      },
+    },
   },
 });

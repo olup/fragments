@@ -9,8 +9,8 @@
   "scripts": {
     "api": "yarn workspace api",
     "web": "yarn workspace web",
-    "heroku-postbuild": "yarn api build",
     "dev": "concurrently \"yarn api dev\" \"yarn web start\"",
+    "netlify": "netlify dev",
     "build": "yarn web build && yarn api build"
   },
   "dependencies": {
