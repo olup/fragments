@@ -2,28 +2,23 @@ import { Button } from "@chakra-ui/button";
 import { Input } from "@chakra-ui/input";
 import { Center, Flex, Heading, Text } from "@chakra-ui/layout";
 import { Container } from "components/Layout";
-import { useAppStore } from "contexts/appStore";
+import { useAppStore } from "hooks/appStore";
 import { useAuth } from "hooks/useAuth";
-import { github } from "libs/github";
-import { setStore } from "libs/remoteStore";
+import { useGithubContext } from "hooks/useGithub";
 import React, { useEffect, useState } from "react";
-import { HiPlusCircle } from "react-icons/hi";
+import { HiPlus, HiPlusCircle } from "react-icons/hi";
 
 export const SettingsPage = () => {
   const { token } = useAuth();
   const [repos, setRepos] = useState<{ name: string; owner: any }[]>([]);
   const { set } = useAppStore();
+  const { github } = useGithubContext();
 
   useEffect(() => {
-    fetch("https://api.github.com/user/repos?type=private", {
-      headers: { authorization: "token " + token },
-    })
-      .then((r) => r.json())
-      .then((r) => setRepos(r));
-  }, []);
+    github?.listRepo().then((r) => setRepos(r));
+  }, [github]);
 
   const setSettings = async (repo: { name: string; owner: any }) => {
-    github.setRepo(repo.owner.login, repo.name);
     set({
       repo: {
         name: repo.name,
@@ -43,13 +38,20 @@ export const SettingsPage = () => {
         <Text mb={5}>You can either create a new one :</Text>
         <Flex mb={5}>
           <Input placeholder="Repository name" mr={2} />
-          <Button leftIcon={<HiPlusCircle />}>Create</Button>
+          <Button leftIcon={<HiPlus />} variant="outlineRaised">
+            Create
+          </Button>
         </Flex>
         <Text mb={5}> Or pick an existing private one :</Text>
 
         <Flex wrap="wrap">
           {repos.map((repo) => (
-            <Button mr={3} mb={3} onClick={() => setSettings(repo)}>
+            <Button
+              mr={3}
+              mb={3}
+              onClick={() => setSettings(repo)}
+              variant="outlineRaised"
+            >
               {repo.name}
             </Button>
           ))}

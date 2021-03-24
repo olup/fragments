@@ -1,7 +1,7 @@
 import { Body, Container, Main } from "components/Layout";
 import { OptionBar } from "components/OptionBar";
 import { Side } from "components/Side";
-import { useAppStore } from "contexts/appStore";
+import { useAppStore } from "hooks/appStore";
 import { useAuth } from "hooks/useAuth";
 import { useTypeWriterPos } from "hooks/useTypewriterPos";
 import { Feed } from "pages/Feed";
@@ -10,13 +10,7 @@ import { Home } from "pages/Home";
 import { LoginPage } from "pages/LoginPage";
 import { SettingsPage } from "pages/SettingsPage";
 import { TagPage } from "pages/TagPage";
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 export const MainRouter = () => {
   const useTypewriterScroll = useAppStore((s) => s.useTypewriterMode);

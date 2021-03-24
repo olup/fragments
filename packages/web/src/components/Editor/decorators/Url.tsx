@@ -8,15 +8,15 @@ import tinyColor from "tinycolor2";
 const UrlStyled = styled.span<{
   showAsLink?: boolean;
 }>`
-  color: ${(p) => p.theme.colors.textColor};
+  color: #222;
   border-bottom: 1px dashed
-    ${(p) => tinyColor(p.theme.colors.textColor).setAlpha(0.3).toRgbString()};
+    ${(p) => tinyColor("#222").setAlpha(0.3).toRgbString()};
   ${(p) =>
     p.showAsLink &&
     css`
       cursor: pointer;
       &:hover {
-        border-bottom-color: ${p.theme.colors.textColor};
+        border-bottom-color: #222};
       }
     `};
 `;

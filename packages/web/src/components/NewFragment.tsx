@@ -3,18 +3,24 @@ import React, { FC } from "react";
 import { useState } from "react";
 import { Fragment } from "./Fragment";
 import OutsideClickHandler from "react-outside-click-handler";
+import { Box, BoxProps } from "@chakra-ui/layout";
+import { useColorModeValue } from "@chakra-ui/color-mode";
 
-const NewBlock = styled.div`
-  padding: 20px;
-  background-color: ${(p) => p.theme.colors.fragmentBackgroundColor};
-  width: 100%;
-  box-sizing: border-box;
-  font-style: italic;
-  color: #ccc;
-  font-size: 20px;
-  background-color: #fff;
-  cursor: text;
-`;
+const NewBlock: FC<BoxProps> = (props) => {
+  const bg = useColorModeValue("white", "#333");
+  return (
+    <Box
+      bg={bg}
+      p={5}
+      w="100%"
+      fontSize={20}
+      fontStyle="italic"
+      cursor="text"
+      color="#ccc"
+      {...props}
+    />
+  );
+};
 
 export const NewFragment: FC<{
   onOutsideClick?: () => any;

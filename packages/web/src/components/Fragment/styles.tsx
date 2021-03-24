@@ -1,5 +1,7 @@
-import { Flex } from "@chakra-ui/layout";
+import { useColorModeValue } from "@chakra-ui/color-mode";
+import { Box, BoxProps, Flex } from "@chakra-ui/layout";
 import styled from "@emotion/styled/macro";
+import { FC } from "react";
 import AutosizeInput from "react-input-autosize";
 
 export const Info = styled(Flex)`
@@ -7,23 +9,26 @@ export const Info = styled(Flex)`
   color: #ccc;
   display: inline-flex;
 `;
-
 export const HideOut = styled.div``;
-export const FragmentStyled = styled.div`
-  padding: 20px 30px;
-  background-color: white;
-  color: #222;
-  width: 100%;
-  box-sizing: border-box;
-  box-shadow: 7px 7px 0px 0px #00000008;
-  ${HideOut} {
-    opacity: 0;
-  }
+export const FragmentStyled: FC<BoxProps> = ({ ...props }) => {
+  const bg = useColorModeValue("white", "#333");
+  return <Box background={bg} p={5} {...props} />;
+};
+// styled(Box)`
+//   padding: 20px 30px;
+//   background-color: white;
+//   color: #222;
+//   width: 100%;
+//   box-sizing: border-box;
+//   box-shadow: 7px 7px 0px 0px #00000008;
+//   ${HideOut} {
+//     opacity: 0;
+//   }
 
-  &:hover ${HideOut} {
-    opacity: 1;
-  }
-`;
+//   &:hover ${HideOut} {
+//     opacity: 1;
+//   }
+// `;
 
 export const HandleInput = styled(AutosizeInput)`
   margin-bottom: 20px;

@@ -1,40 +1,22 @@
 import { Box } from "@chakra-ui/layout";
+import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { Editor } from "components/Editor";
-import { useEngine } from "contexts/engine";
-import { FragmentProvider } from "contexts/fragment";
+import { Preview } from "components/Preview";
+import { useEngine } from "hooks/engine";
 import { Fragment as FragmentType } from "libs/engine";
 import React, { FC } from "react";
-import {
-  HiDotsHorizontal,
-  HiDotsVertical,
-  HiMenu,
-  HiOutlineBadgeCheck,
-  HiOutlineChartSquareBar,
-  HiOutlineLink,
-  HiOutlineMenu,
-  HiOutlineTrash,
-} from "react-icons/hi";
+import { HiDotsHorizontal, HiOutlineLink } from "react-icons/hi";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Expander, Flex } from "../Layout";
 import { Link } from "../Link";
 import { useLogic } from "./hooks";
-import { Preview } from "components/Preview";
 import {
+  BackLinksLine,
   FragmentStyled,
   HandleInput,
   HideOut,
   Info,
-  BackLinksLine,
 } from "./styles";
-import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  IconButton,
-  MenuIcon,
-} from "@chakra-ui/react";
-import { Button } from "components/Button";
 
 export type FragmentProps = {
   fragment?: FragmentType;
@@ -72,54 +54,51 @@ export const Fragment: FC<FragmentProps> = (props) => {
 
   return (
     <Box w="100%">
-      <FragmentProvider value={fragment || undefined}>
-        <Box w="100%">
-          <FragmentStyled>
-            <HideOut>
-              <Flex>
-                <HandleInput
-                  value={handle}
-                  onChange={(e) => onHandleChange(e.target.value)}
-                  spellCheck={false}
-                  onBlur={() => onSave()}
-                  onClick={goToHandlePage}
-                />
-                <Expander />
-                <Menu>
-                  <MenuButton h={5} color="#ccc">
-                    <HiDotsHorizontal />
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem onClick={() => navigate("/handle/" + handle)}>
-                      Open
-                    </MenuItem>
-                    <MenuItem onClick={() => setUseSpellCheck(!useSpellCheck)}>
-                      {useSpellCheck ? "Disable" : "Enable"} spellCheck
-                    </MenuItem>
-                    <MenuItem onClick={() => setShowCount(!showCount)}>
-                      {showCount ? "Hide" : "Show"} count
-                    </MenuItem>
-                    <MenuItem onClick={() => onDelete?.(handle)}>
-                      Delete
-                    </MenuItem>
-                  </MenuList>
-                </Menu>
-              </Flex>
-            </HideOut>
-            <Editor
-              autoFocus={autoFocus}
-              onChange={onContentChange}
-              initialValue={fragment?.content || initialContent || ""}
-              handle={handle}
-              onBlur={handleBlur}
-              spellCheck={useSpellCheck}
-            />
-            <HideOut>
-              <Flex mt={5}>
-                {/* <Info>
+      <Box w="100%">
+        <FragmentStyled>
+          <HideOut>
+            <Flex>
+              <HandleInput
+                value={handle}
+                onChange={(e) => onHandleChange(e.target.value)}
+                spellCheck={false}
+                onBlur={() => onSave()}
+                onClick={goToHandlePage}
+              />
+              <Expander />
+              <Menu>
+                <MenuButton h={5} color="#ccc">
+                  <HiDotsHorizontal />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => navigate("/handle/" + handle)}>
+                    Open
+                  </MenuItem>
+                  <MenuItem onClick={() => setUseSpellCheck(!useSpellCheck)}>
+                    {useSpellCheck ? "Disable" : "Enable"} spellCheck
+                  </MenuItem>
+                  <MenuItem onClick={() => setShowCount(!showCount)}>
+                    {showCount ? "Hide" : "Show"} count
+                  </MenuItem>
+                  <MenuItem onClick={() => onDelete?.(handle)}>Delete</MenuItem>
+                </MenuList>
+              </Menu>
+            </Flex>
+          </HideOut>
+          <Editor
+            autoFocus={autoFocus}
+            onChange={onContentChange}
+            initialValue={fragment?.content || initialContent || ""}
+            handle={handle}
+            onBlur={handleBlur}
+            spellCheck={useSpellCheck}
+          />
+          <HideOut>
+            <Flex mt={5}>
+              {/* <Info>
                   {format(fragment?.createdAt || new Date(), "dd/MM/yyyy")}
                 </Info> */}
-                {/* <Info mr={2}>
+              {/* <Info mr={2}>
                   <Link
                     onClick={() => setUseSpellCheck(!useSpellCheck)}
                     active={useSpellCheck}
@@ -135,34 +114,33 @@ export const Fragment: FC<FragmentProps> = (props) => {
                     <HiOutlineChartSquareBar />
                   </Link>
                 </Info> */}
-                <Expander />
-                {showCount && (
-                  <Info>
-                    c {c} w {w}
-                  </Info>
-                )}
+              <Expander />
+              {showCount && (
+                <Info>
+                  c {c} w {w}
+                </Info>
+              )}
+            </Flex>
+          </HideOut>
+        </FragmentStyled>
+        {hasBackLinks && (
+          <BackLinksLine mt={5}>
+            <HiOutlineLink size={18} />
+            {linkedBy?.map((link) => (
+              <Flex mr={2}>
+                <Preview
+                  handle={link.handle}
+                  previewContent={link.content.slice(20)}
+                >
+                  <RouterLink to={"/handle/" + link?.handle}>
+                    <Link>{link?.handle}</Link>
+                  </RouterLink>
+                </Preview>
               </Flex>
-            </HideOut>
-          </FragmentStyled>
-          {hasBackLinks && (
-            <BackLinksLine mt={5}>
-              <HiOutlineLink size={18} />
-              {linkedBy?.map((link) => (
-                <Flex mr={2}>
-                  <Preview
-                    handle={link.handle}
-                    previewContent={link.content.slice(20)}
-                  >
-                    <RouterLink to={"/handle/" + link?.handle}>
-                      <Link>{link?.handle}</Link>
-                    </RouterLink>
-                  </Preview>
-                </Flex>
-              ))}
-            </BackLinksLine>
-          )}
-        </Box>
-      </FragmentProvider>
+            ))}
+          </BackLinksLine>
+        )}
+      </Box>
     </Box>
   );
 };

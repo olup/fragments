@@ -34,7 +34,7 @@ export const useAuth = () => {
       const code = urlParams.get("code");
       // TOTO:parametrize
       const { access_token } = await fetch(
-        `https://api.fragment-app.workers.dev/token?code=${code}`
+        `${process.env.REACT_APP_API_URL}/token?code=${code}`
       ).then((r) => r.json());
 
       if (!access_token) return;

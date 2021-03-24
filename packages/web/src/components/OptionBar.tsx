@@ -1,5 +1,6 @@
+import { useColorMode } from "@chakra-ui/color-mode";
 import styled from "@emotion/styled/macro";
-import { useAppStore } from "contexts/appStore";
+import { useAppStore } from "hooks/appStore";
 import { FC } from "react";
 
 const OptionBatStyled = styled.div`
@@ -9,8 +10,6 @@ const OptionBatStyled = styled.div`
   right: 0;
   padding: 5px;
   opacity: 0;
-  background-color: ${(p) => p.theme.colors.pageBackgroundColor};
-  color: ${(p) => p.theme.colors.textColor};
 
   &:hover {
     opacity: 1;
@@ -41,6 +40,7 @@ const Option = styled.div`
 `;
 export const OptionBar: FC = () => {
   const { set, useDarkMode, useTypewriterMode } = useAppStore((s) => s);
+  const { colorMode, toggleColorMode } = useColorMode();
   return (
     <OptionBatStyled>
       <Option
@@ -52,14 +52,8 @@ export const OptionBar: FC = () => {
       >
         Typewriter Mode {useTypewriterMode ? "ON" : "OFF"}
       </Option>
-      <Option
-        onClick={() =>
-          set({
-            useDarkMode: !useDarkMode,
-          })
-        }
-      >
-        Dark Theme {useDarkMode ? "ON" : "OFF"}
+      <Option onClick={() => toggleColorMode()}>
+        Use {colorMode === "light" ? "Dark" : "Light"} Theme
       </Option>
     </OptionBatStyled>
   );

@@ -1,12 +1,12 @@
 import { buildIndex, Engine, Fragment } from "libs/engine";
-import { github } from "libs/github";
 import { pick } from "lodash";
 import create from "zustand";
 import { devtools } from "zustand/middleware";
-import { ElementaryFragment } from "../libs/github";
+import { ElementaryFragment, Repo } from "../libs/github";
 
 export const useEngine = create<{
   engine: Engine;
+  repo?: Repo;
   actions: {
     reset: (engine: Engine) => void;
     getRandomFragment: () => Fragment;
@@ -14,13 +14,14 @@ export const useEngine = create<{
     updateFragment: (fragment: ElementaryFragment) => Promise<Fragment>;
     deleteFragment: (handle: string) => Promise<boolean>;
     searchFragment: (searchString: string) => Fragment[];
-
     getTag: (
       name: string
     ) => {
       name: string;
       handles: string[];
     };
+
+    setRepo: (repo: any) => void;
   };
 }>(
   devtools((set, get) => ({
@@ -28,6 +29,7 @@ export const useEngine = create<{
       fragments: {},
       tags: {},
     },
+    repo: undefined,
     actions: {
       reset: (engine: Engine) => set((s) => ({ ...s, engine }), true),
 
@@ -39,7 +41,7 @@ export const useEngine = create<{
       getFragments: (handles: string[]) =>
         Object.values(pick(get().engine.fragments, handles)),
       updateFragment: async (fragment: ElementaryFragment) => {
-        github.stageUpsert(fragment);
+        get().repo?.stageUpsert(fragment);
 
         const fragments: Record<string, ElementaryFragment> = get().engine
           .fragments;
@@ -58,7 +60,7 @@ export const useEngine = create<{
 
       deleteFragment: async (handle: string) => {
         const fragment = get().engine.fragments[handle];
-        github.stageDelete(handle);
+        get().repo?.stageDelete(handle);
 
         if (fragment) {
           get().actions.reset(
@@ -72,8 +74,8 @@ export const useEngine = create<{
 
         return true;
       },
-
-      getTag: (name: string) => get().engine.tags[name],
+      getTag: (name) => get().engine.tags[name],
+      setRepo: (repo) => set({ repo }),
     },
   }))
 );

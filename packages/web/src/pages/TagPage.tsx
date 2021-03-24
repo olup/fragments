@@ -4,7 +4,7 @@ import { Fragment } from "components/Fragment";
 import { Flex } from "components/Layout";
 import { Link } from "components/Link";
 import { NewFragment } from "components/NewFragment";
-import { useEngine } from "contexts/engine";
+import { useEngine } from "hooks/engine";
 import useStickyHeader from "hooks/useStickyHeader";
 import React, { useMemo } from "react";
 import { HiHashtag } from "react-icons/hi";
@@ -15,9 +15,9 @@ const Header = styled.div`
 `;
 
 const HiddenHeader = styled.div`
-  width: 100%;
-  background-color: #eee;
-  top: -100px;
+  // width: 100%;
+  background-color: inherit;
+  top: -150px;
   position: fixed;
   z-index: 10;
   transition: 0.3s;
@@ -38,20 +38,13 @@ export const TagPage = () => {
   ]);
 
   return (
-    <Box>
+    <Box position="relative">
       <HiddenHeader className={isSticky ? "sticky" : ""}>
         <Header>
           <RouterLink to="/">
             <Link>Back home</Link>
           </RouterLink>
-          <Flex
-            mt={2}
-            align="center"
-            style={{
-              color: "#bbb",
-              fontSize: 25,
-            }}
-          >
+          <Flex mt={2} align="center" color="#bbb" fontSize={25}>
             <HiHashtag /> {tagName}
           </Flex>
         </Header>

@@ -7,7 +7,7 @@ export const LoginPage = () => {
   const { login } = useAuth();
   return (
     <Center h="100vh">
-      <Button leftIcon={<ImGithub />} onClick={login}>
+      <Button leftIcon={<ImGithub />} onClick={login} variant="outlineRaised">
         Login with Github
       </Button>
     </Center>

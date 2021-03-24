@@ -31,14 +31,17 @@ export const theme = extendTheme({
         ghost: {
           borderBottomWidth: 0,
         },
+        outlineRaised: {
+          border: "1px solid",
+          transition: 0,
+          borderBottomWidth: 3,
+          _active: {
+            borderBottomWidth: 1,
+          },
+        },
       },
       baseStyle: {
         borderRadius: 5,
-        transition: 0,
-        borderBottomWidth: 3,
-        _active: {
-          borderBottomWidth: 1,
-        },
       },
     },
   },

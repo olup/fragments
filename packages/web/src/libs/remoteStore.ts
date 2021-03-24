@@ -1,5 +1,5 @@
 export const getStore = (token: string) => {
-  return fetch(`http://127.0.0.1:8787/settings`, {
+  return fetch(`${process.env.REACT_APP_API_URL}/settings`, {
     headers: {
       Authorization: `token ${token}`,
     },
@@ -7,7 +7,7 @@ export const getStore = (token: string) => {
 };
 
 export const setStore = (token: string, body: any) => {
-  return fetch(`http://127.0.0.1:8787/settings`, {
+  return fetch(`${process.env.REACT_APP_API_URL}/settings`, {
     method: "PUT",
     headers: {
       Authorization: `token ${token}`,

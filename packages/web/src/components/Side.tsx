@@ -3,7 +3,7 @@ import { Button } from "@chakra-ui/button";
 import { Box, Center, Flex, Kbd } from "@chakra-ui/layout";
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useEngine } from "contexts/engine";
+import { useEngine } from "hooks/engine";
 import { useAuth } from "hooks/useAuth";
 import humanId from "human-id";
 import React, { FC, useCallback, useState } from "react";
@@ -38,8 +38,6 @@ const SideStyled = styled.div<{ isVisible?: boolean }>`
 const Inside = styled.div`
   background-color: #383838;
   width: ${SIDE_WIDTH}px;
-  //padding: 20px;
-  padding-top: 20px;
   height: 100%;
   box-sizing: border-box;
 `;
@@ -51,7 +49,6 @@ const FixLink = styled.div<{ isSideOpen: boolean }>`
   top: 10px;
   left: ${(p) => (p.isSideOpen ? SIDE_WIDTH + 10 : 10)}px;
   padding: 5px;
-  color: #222;
   opacity: 0.5;
   z-index: 200;
   transition: 0.5s;
@@ -88,6 +85,7 @@ const SearchInput = styled.input`
   font-size: 18px;
   width: 100%;
   opacity: 0.5;
+  color: #222;
   &:hover,
   &:focus {
     opacity: 1;
@@ -101,7 +99,6 @@ export const Side: FC = () => {
   const tagsByName = useEngine((s) => s.engine.tags);
   const tags = Object.keys(tagsByName);
   const [debouncedSearch] = useDebounce(search, 300);
-  const { textColor } = useTheme().colors;
   const navigate = useNavigate();
 
   const searchFragments = useEngine((s) => s.actions.searchFragment);
@@ -134,10 +131,11 @@ export const Side: FC = () => {
       </FixLink>
       <SideStyled isVisible={isVisible}>
         <Inside>
-          <Box p={2}>
+          <Box p={5}>
             <Button
               onClick={navigateToNew}
               isFullWidth
+              variant="outlineRaised"
               color="#ccc"
               leftIcon={<HiOutlinePlus size={15} />}
             >
