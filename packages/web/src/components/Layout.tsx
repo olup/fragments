@@ -8,7 +8,7 @@ export const Expander = styled.div`
 `;
 
 export const Main: FC<FlexProps> = ({ ...props }) => {
-  return <Flex backgroundColor="#f3f3f3" p={5} minHeight="100vh" {...props} />;
+  return <Flex backgroundColor="#f9f9f9" p={5} minHeight="100vh" {...props} />;
 };
 
 // styled(Box)`
@@ -16,7 +16,7 @@ export const Main: FC<FlexProps> = ({ ...props }) => {
 //   min-height: 100vh;
 //   display: flex;
 //   justify-content: center;
-//   padding-bottom: 30px;
+//   padding-bottom: 90px;
 
 //   background-color: #eee;
 // `;
