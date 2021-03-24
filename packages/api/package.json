@@ -4,12 +4,11 @@
   "description": "Cloudflare worker TypeScript template",
   "main": "index.js",
   "scripts": {
-    "dev": "wrangler dev"
+    "build": "netlify-lambda build src"
   },
   "author": "author",
   "license": "MIT OR Apache-2.0",
   "devDependencies": {
-    "@cloudflare/workers-types": "^2.0.0",
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
     "chai": "^4.2.0",
@@ -23,7 +22,11 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "@cloudflare/wrangler": "^1.15.0",
+    "@types/aws-lambda": "^8.10.72",
+    "aws-lambda": "^1.0.6",
+    "import": "^0.0.6",
+    "netlify-lambda": "^2.0.3",
+    "node-fetch": "^2.6.1",
     "path-to-regexp": "^6.2.0"
   }
 }

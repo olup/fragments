@@ -10,7 +10,8 @@
     "api": "yarn workspace api",
     "web": "yarn workspace web",
     "heroku-postbuild": "yarn api build",
-    "dev": "concurrently \"yarn api dev\" \"yarn web start\""
+    "dev": "concurrently \"yarn api dev\" \"yarn web start\"",
+    "build": "yarn web build && yarn api build"
   },
   "dependencies": {
     "concurrently": "^6.0.0"

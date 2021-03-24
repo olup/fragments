@@ -1,0 +1,9 @@
+[build]
+  command = "yarn build"
+  publish = "packages/web/build"
+  functions = "packages/api/dist"
+  
+[[redirects]]
+  from = "/api"
+  to = "/.netlify/functions/index"
+  status = 200
