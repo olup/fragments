@@ -18,9 +18,8 @@ const Header = styled.div`
 
 const HiddenHeader = styled.div`
   // width: 100%;
-  background-color: #fff;
+  background-color: #f9f9f9;
   top: -150px;
-  left: 0;
   position: fixed;
   z-index: 10;
   width: 100%;
@@ -44,18 +43,16 @@ export const TagPage = () => {
   return (
     <Box position="relative">
       <HiddenHeader className={isSticky ? "sticky" : ""}>
-        <Center>
-          <Box w={1000}>
-            <Header>
-              <RouterLink to="/">
-                <Link>Back home</Link>
-              </RouterLink>
-              <Flex mt={2} align="center" color="#bbb" fontSize={25}>
-                <HiHashtag /> {tagName}
-              </Flex>
-            </Header>
-          </Box>
-        </Center>
+        <Box w={1000}>
+          <Header>
+            <RouterLink to="/">
+              <Link>Back home</Link>
+            </RouterLink>
+            <Flex mt={2} align="center" color="#bbb" fontSize={25}>
+              <HiHashtag /> {tagName}
+            </Flex>
+          </Header>
+        </Box>
       </HiddenHeader>
 
       <Header>
@@ -92,14 +89,20 @@ export const TagPage = () => {
       )} */}
 
       {fragments?.map((fragment) => (
-        <Flex style={{ marginBottom: 20 }} key={fragment.handle}>
+        <Box key={fragment.handle}>
           <Fragment
             // @ts-ignore
             fragment={fragment}
             onDelete={(handle) => handle && deletFragment(handle)}
             saveOnBlur
           />
-        </Flex>
+          <Box
+            h="3px"
+            w="100%"
+            backgroundColor="#fff"
+            backgroundImage={`url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23f3f3f3' stroke-width='7' stroke-dasharray='6%2c 40' stroke-dashoffset='-100' stroke-linecap='square'/%3e%3c/svg%3e")`}
+          />
+        </Box>
       ))}
 
       <NewFragment

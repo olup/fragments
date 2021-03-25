@@ -31,9 +31,6 @@ export const FragmentStyled: FC<BoxProps> = ({ ...props }) => {
 // `;
 
 export const HandleInput = styled(AutosizeInput)`
-  margin-bottom: 20px;
-  padding-bottom: 5px;
-
   & input {
     &:hover,
     &:focus {

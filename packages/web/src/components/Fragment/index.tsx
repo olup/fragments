@@ -57,7 +57,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
       <Box w="100%">
         <FragmentStyled>
           <HideOut>
-            <Flex>
+            <Flex mb={5}>
               <HandleInput
                 value={handle}
                 onChange={(e) => onHandleChange(e.target.value)}
