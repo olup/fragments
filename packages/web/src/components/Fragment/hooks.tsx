@@ -8,10 +8,10 @@ import { useDebouncedCallback } from "use-debounce/lib";
 import { FragmentProps } from "./index";
 import { defaultFragment } from "libs/engine";
 export const useLogic = ({
-  fragment,
-  autoFocus,
   onHandleChange: onHandleChangeParent,
+  autoFocus,
   initialContent,
+  fragment,
   saveOnBlur,
   autoSave,
   onBlur: onOutsideClick,
@@ -43,6 +43,7 @@ export const useLogic = ({
   }, []);
 
   const saveFragment = useEngine((s) => s.actions.updateFragment);
+  const updateHandle = useEngine((s) => s.actions.updateHandle);
 
   const onSave = useCallback(async () => {
     if (!content || !isDirty) return;
@@ -70,10 +71,17 @@ export const useLogic = ({
     if (autoSave) debouncedSave();
   }, []);
 
-  const onHandleChange = (handle: string) => {
-    setHandle(handle);
-    setIsDirty(true);
-    onHandleChangeParent?.(handle);
+  const onHandleChange = (newHandle: string) => {
+    setHandle(newHandle.replace(/ /, "-"));
+    // setIsDirty(true);
+    onHandleChangeParent?.(newHandle);
+  };
+
+  const onChangeHandle = () => {
+    const oldHandle = fragment?.handle;
+    const newHandle = handle;
+    if (!oldHandle || oldHandle === newHandle) return;
+    updateHandle(oldHandle, newHandle);
   };
 
   useEffect(() => {
@@ -104,6 +112,7 @@ export const useLogic = ({
     onContentChange,
     onHandleChange,
     goToHandlePage,
+    onChangeHandle,
     setUseSpellCheck,
     handleBlur,
     setShowCount,

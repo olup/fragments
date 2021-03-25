@@ -32,12 +32,12 @@ export type FragmentProps = {
 export const Fragment: FC<FragmentProps> = (props) => {
   const navigate = useNavigate();
   const {
-    onSave,
     onContentChange,
     onHandleChange,
     goToHandlePage,
     setUseSpellCheck,
     handle,
+    onChangeHandle,
     useSpellCheck,
     hasBackLinks,
     handleBlur,
@@ -48,9 +48,9 @@ export const Fragment: FC<FragmentProps> = (props) => {
   } = useLogic(props);
 
   const { fragment, autoFocus, initialContent, onDelete } = props;
-  const linkedBy = useEngine((s) =>
-    s.actions.getFragments(fragment?.linkedBy || [])
-  );
+  // const linkedBy = useEngine((s) =>
+  //   s.actions.getFragments(fragment?.linkedBy || [])
+  // );
 
   return (
     <Box w="100%">
@@ -62,7 +62,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
                 value={handle}
                 onChange={(e) => onHandleChange(e.target.value)}
                 spellCheck={false}
-                onBlur={() => onSave()}
+                onBlur={() => onChangeHandle()}
                 onClick={goToHandlePage}
               />
               <Expander />
@@ -86,6 +86,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
             </Flex>
           </HideOut>
           <Editor
+            key={fragment?.content}
             autoFocus={autoFocus}
             onChange={onContentChange}
             initialValue={fragment?.content || initialContent || ""}
@@ -123,7 +124,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
             </Flex>
           </HideOut>
         </FragmentStyled>
-        {hasBackLinks && (
+        {/* {hasBackLinks && (
           <BackLinksLine mt={5}>
             <HiOutlineLink size={18} />
             {linkedBy?.map((link) => (
@@ -139,7 +140,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
               </Flex>
             ))}
           </BackLinksLine>
-        )}
+        )} */}
       </Box>
     </Box>
   );

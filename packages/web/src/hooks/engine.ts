@@ -1,5 +1,5 @@
 import { build, Engine, Fragment, fragmentToFile } from "libs/engine";
-import { pick } from "lodash";
+import { cloneDeep, pick } from "lodash";
 import create from "zustand";
 import { devtools } from "zustand/middleware";
 import { Repo } from "../libs/github";
@@ -12,6 +12,7 @@ export const useEngine = create<{
     getRandomFragment: () => Fragment;
     getFragments: (handles: string[]) => Fragment[];
     updateFragment: (fragment: Fragment) => Promise<Fragment>;
+    updateHandle: (oldHandle: string, newHandle: string) => Promise<Boolean>;
     deleteFragment: (handle: string) => Promise<boolean>;
     searchFragment: (searchString: string) => Fragment[];
     getTag: (
@@ -49,6 +50,32 @@ export const useEngine = create<{
           build(Object.values({ ...fragments, [fragment.handle]: fragment }))
         );
         return get().engine.fragments[fragment.handle];
+      },
+      updateHandle: async (oldHandle: string, newHandle: string) => {
+        const updatedFragments = Object.values(get().engine.fragments).map(
+          (f) => {
+            const fragment = cloneDeep(f);
+            if (fragment.handle === oldHandle) fragment.handle = newHandle;
+            fragment.content = fragment.content.replace(
+              new RegExp(`@${oldHandle}`, "gm"),
+              `@${newHandle}`
+            );
+            fragment.content = fragment.content.replace(
+              new RegExp(`\\[\\[${oldHandle}\\]\\]`, "gm"),
+              `[[${newHandle}]]`
+            );
+            // persist saved changes
+            get().repo?.stageUpsert(fragmentToFile(fragment));
+            return fragment;
+          }
+        );
+
+        // delete old file, as we created a new one
+        get().repo?.stageDelete(oldHandle);
+
+        get().actions.reset(build(updatedFragments));
+
+        return true;
       },
       searchFragment: (searchString: string) =>
         Object.values(get().engine.fragments).filter((f) =>
