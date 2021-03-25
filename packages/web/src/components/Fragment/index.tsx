@@ -1,11 +1,11 @@
 import { Box } from "@chakra-ui/layout";
-import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Icon, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { Editor } from "components/Editor";
 import { Preview } from "components/Preview";
 import { useEngine } from "hooks/engine";
 import { Fragment as FragmentType } from "libs/engine";
 import React, { FC } from "react";
-import { HiDotsHorizontal, HiOutlineLink } from "react-icons/hi";
+import { HiDotsHorizontal, HiLink, HiOutlineLink } from "react-icons/hi";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Expander, Flex } from "../Layout";
 import { Link } from "../Link";
@@ -17,6 +17,8 @@ import {
   HideOut,
   Info,
 } from "./styles";
+import { BiDotsHorizontal } from "react-icons/bi";
+import { graphqlSync } from "graphql";
 
 export type FragmentProps = {
   fragment?: FragmentType;
@@ -48,16 +50,16 @@ export const Fragment: FC<FragmentProps> = (props) => {
   } = useLogic(props);
 
   const { fragment, autoFocus, initialContent, onDelete } = props;
-  // const linkedBy = useEngine((s) =>
-  //   s.actions.getFragments(fragment?.linkedBy || [])
-  // );
+  const linkedByCount = useEngine(
+    (s) => s.actions.getFragments(fragment?.linkedBy || []).length
+  );
 
   return (
     <Box w="100%">
       <Box w="100%">
         <FragmentStyled>
           <HideOut>
-            <Flex mb={5}>
+            <Flex mb={5} align="center">
               <HandleInput
                 value={handle}
                 onChange={(e) => onHandleChange(e.target.value)}
@@ -65,10 +67,20 @@ export const Fragment: FC<FragmentProps> = (props) => {
                 onBlur={() => onChangeHandle()}
                 onClick={goToHandlePage}
               />
+              {linkedByCount > 0 && (
+                <Flex align="center" ml={5} color="#ccc">
+                  <Icon as={HiLink} mr={1} /> {linkedByCount}
+                </Flex>
+              )}
               <Expander />
               <Menu>
-                <MenuButton h={5} color="#ccc">
-                  <HiDotsHorizontal />
+                <MenuButton
+                  h={5}
+                  color="#ccc"
+                  p={2}
+                  _hover={{ color: "#aaa", backgroundColor: "#f9f9f9" }}
+                >
+                  <Icon as={BiDotsHorizontal} fontSize="20px" />
                 </MenuButton>
                 <MenuList>
                   <MenuItem onClick={() => navigate("/handle/" + handle)}>
