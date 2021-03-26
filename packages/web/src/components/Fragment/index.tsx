@@ -3,7 +3,7 @@ import { Icon, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { Editor } from "components/Editor";
 import { Preview } from "components/Preview";
 import { useEngine } from "hooks/engine";
-import { Fragment as FragmentType } from "libs/engine";
+import { defaultFragment, Fragment as FragmentType } from "libs/engine";
 import React, { FC } from "react";
 import { HiDotsHorizontal, HiLink, HiOutlineLink } from "react-icons/hi";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ import {
 } from "./styles";
 import { BiDotsHorizontal } from "react-icons/bi";
 import { graphqlSync } from "graphql";
+import { generateHandle } from "utils";
 
 export type FragmentProps = {
   fragment?: FragmentType;
@@ -29,10 +30,24 @@ export type FragmentProps = {
   onBlur?: () => any | void;
   saveOnBlur?: Boolean;
   autoSave?: Boolean;
+  handle?: string;
 };
 
 export const Fragment: FC<FragmentProps> = (props) => {
   const navigate = useNavigate();
+
+  const initialFragment = useEngine(
+    (s) =>
+      s.engine.fragments[
+        props.handle || props.fragment?.handle || generateHandle()
+      ]
+  );
+
+  const fragment = initialFragment || {
+    ...defaultFragment,
+    handle: props.handle,
+  };
+
   const {
     onContentChange,
     onHandleChange,
@@ -47,9 +62,9 @@ export const Fragment: FC<FragmentProps> = (props) => {
     setShowCount,
     c,
     w,
-  } = useLogic(props);
+  } = useLogic({ ...props, fragment });
 
-  const { fragment, autoFocus, initialContent, onDelete } = props;
+  const { autoFocus, initialContent, onDelete } = props;
   const linkedByCount = useEngine(
     (s) => s.actions.getFragments(fragment?.linkedBy || []).length
   );

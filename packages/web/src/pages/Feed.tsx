@@ -4,11 +4,14 @@ import { Flex } from "components/Layout";
 import { Link } from "components/Link";
 import { NewFragment } from "components/NewFragment";
 import { useEngine } from "hooks/engine";
+import { reverse, sortBy } from "lodash";
 import { Link as RouterLink } from "react-router-dom";
 
 export const Feed = () => {
   const fragmentsByHandle = useEngine((s) => s.engine.fragments);
-  const fragments = Object.values(fragmentsByHandle);
+  const fragments = reverse(
+    sortBy(Object.values(fragmentsByHandle), "createdAt")
+  );
 
   const starFragments = useEngine((s) =>
     s.actions.getFragments(s.engine.tags["star"]?.handles || [])

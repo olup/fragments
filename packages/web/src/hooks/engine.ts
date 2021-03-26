@@ -1,4 +1,5 @@
-import { build, Engine, Fragment, fragmentToFile } from "libs/engine";
+import Fuse from "fuse.js";
+import { build, Engine, exportToFiles, Fragment } from "libs/engine";
 import { cloneDeep, pick } from "lodash";
 import create from "zustand";
 import { devtools } from "zustand/middleware";
@@ -32,59 +33,73 @@ export const useEngine = create<{
     },
     repo: undefined,
     actions: {
-      reset: (engine: Engine) => set((s) => ({ ...s, engine }), true),
+      reset: (engine: Engine) => {
+        set((s) => ({ ...s, engine }), true);
+      },
 
       getRandomFragment: () => {
         const fragments = get().engine.fragments;
         const keys = Object.keys(fragments);
         return fragments[keys[(keys.length * Math.random()) << 0]];
       },
+
       getFragments: (handles: string[]) =>
         Object.values(pick(get().engine.fragments, handles)),
-      updateFragment: async (fragment: Fragment) => {
-        get().repo?.stageUpsert(fragmentToFile(fragment));
 
+      updateFragment: async (fragment: Fragment) => {
         const fragments: Record<string, Fragment> = get().engine.fragments;
 
         get().actions.reset(
           build(Object.values({ ...fragments, [fragment.handle]: fragment }))
         );
+        get().repo?.stageChanges(exportToFiles(get().engine));
         return get().engine.fragments[fragment.handle];
       },
+
       updateHandle: async (oldHandle: string, newHandle: string) => {
         const updatedFragments = Object.values(get().engine.fragments).map(
           (f) => {
             const fragment = cloneDeep(f);
+
             if (fragment.handle === oldHandle) fragment.handle = newHandle;
+
             fragment.content = fragment.content.replace(
               new RegExp(`@${oldHandle}`, "gm"),
               `@${newHandle}`
             );
+
             fragment.content = fragment.content.replace(
               new RegExp(`\\[\\[${oldHandle}\\]\\]`, "gm"),
               `[[${newHandle}]]`
             );
+
+            fragment.children =
+              fragment.children?.map((c) => {
+                if (c === oldHandle) return newHandle;
+                return c;
+              }) || [];
             // persist saved changes
-            get().repo?.stageUpsert(fragmentToFile(fragment));
             return fragment;
           }
         );
 
-        // delete old file, as we created a new one
-        get().repo?.stageDelete(oldHandle);
-
         get().actions.reset(build(updatedFragments));
+        get().repo?.stageChanges(exportToFiles(get().engine));
 
         return true;
       },
-      searchFragment: (searchString: string) =>
-        Object.values(get().engine.fragments).filter((f) =>
-          JSON.stringify(f).includes(searchString)
-        ),
+
+      searchFragment: (searchString: string) => {
+        if (!searchString) return [];
+        const fuse = new Fuse(Object.values(get().engine.fragments), {
+          keys: ["handle", "content"],
+          includeMatches: true,
+        });
+        return fuse.search(searchString).map((el) => el.item);
+      },
 
       deleteFragment: async (handle: string) => {
         const fragment = get().engine.fragments[handle];
-        get().repo?.stageDelete(handle);
 
         if (fragment) {
           get().actions.reset(
@@ -94,6 +109,7 @@ export const useEngine = create<{
               )
             )
           );
+          get().repo?.stageChanges(exportToFiles(get().engine));
         }
 
         return true;

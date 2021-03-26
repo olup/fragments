@@ -8,7 +8,7 @@ import { useAppStore } from "hooks/appStore";
 import { useEngine } from "hooks/engine";
 import { useAuth } from "hooks/useAuth";
 import humanId from "human-id";
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useMemo, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import {
   HiArrowLeft,
@@ -17,11 +17,13 @@ import {
   HiMenu,
   HiOutlinePlus,
   HiRefresh,
+  HiTag,
   HiX,
 } from "react-icons/hi";
 import { MdAllOut, MdClose } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce/lib";
+import { RiHomeLine } from "react-icons/ri";
 
 const SIDE_WIDTH = 250;
 
@@ -107,7 +109,9 @@ export const Side: FC = () => {
   const set = useAppStore((s) => s.set);
 
   const searchFragments = useEngine((s) => s.actions.searchFragment);
-  const fragmentsFound = searchFragments(debouncedSearch);
+  const fragmentsFound = useMemo(() => searchFragments(debouncedSearch), [
+    debouncedSearch,
+  ]);
 
   const handleToggleShow = useCallback(() => {
     setIsVisbile(!isVisible);
@@ -159,15 +163,23 @@ export const Side: FC = () => {
           {!search && (
             <>
               <Link to={"/"}>
-                <Title as={SideLink}>Home</Title>
+                <Title as={SideLink}>
+                  <Icon as={RiHomeLine} mr={3} /> Home
+                </Title>
               </Link>
 
               <Link to={"/feed"}>
-                <Title as={SideLink}>Feed</Title>
+                <Title as={SideLink}>
+                  <Icon as={HiMenu} mr={3} />
+                  Feed
+                </Title>
               </Link>
 
-              <Title as={SideLink}>Tags</Title>
-              <Box mb={5}>
+              <Title as={SideLink}>
+                <Icon as={HiTag} mr={3} />
+                Tags
+              </Title>
+              <Box mb={5} pl={2}>
                 {tags?.map((tag) => (
                   <Link to={"/tag/" + tag} key={tag}>
                     <SideLink key={tag}>

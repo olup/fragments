@@ -11,6 +11,7 @@ import { HiHashtag } from "react-icons/hi";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { MdCreate } from "react-icons/md";
 import Icon from "@chakra-ui/icon";
+import { sortBy } from "lodash";
 
 const Header = styled.div`
   padding: 20px 0;
@@ -36,9 +37,10 @@ export const TagPage = () => {
   const tag = useEngine((s) => s.engine.tags[tagName]);
   const getFragments = useEngine((s) => s.actions.getFragments);
   const deletFragment = useEngine((s) => s.actions.deleteFragment);
-  const fragments = useMemo(() => (tag ? getFragments(tag.handles) : []), [
-    tag,
-  ]);
+  const fragments = useMemo(
+    () => sortBy(tag ? getFragments(tag.handles) : [], ["createdAt", "handle"]),
+    [tag]
+  );
 
   return (
     <Box position="relative">

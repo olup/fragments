@@ -1,7 +1,9 @@
-import { Octokit } from "@octokit/rest";
+import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
+import { Endpoints } from "@octokit/types";
 import { format } from "date-fns";
 import { gql, GraphQLClient } from "graphql-request";
-import { debounce, keyBy, omit } from "lodash";
+import { debounce, keyBy, omit, uniq } from "lodash";
+import { simpleHash } from "utils";
 
 export type ElementaryFragment = {
   handle: string;
@@ -34,7 +36,7 @@ export const createGithubKit = async (token: string) => {
 
   const gqlClient = new GraphQLClient("https://api.github.com/graphql", {
     headers: {
-      authorization: "bearer " + token,
+      authorization: "token " + token,
     },
   });
 
@@ -55,10 +57,13 @@ export const createGithubKit = async (token: string) => {
   const initRepo = (repo: string, owner: string, autoSave?: boolean) => {
     let isCommiting = false;
     let hasStagedElements = false;
+    let lastCommit: any | undefined;
+    let lastTree: any | undefined;
+    let lastFilesHash: Record<string, string> = {};
 
     const queue: {
-      toDelete?: string[];
-      toUpsert?: ElementaryFragment[];
+      toDelete: string[];
+      toUpsert: ElementaryFragment[];
     } = {
       toDelete: [],
       toUpsert: [],
@@ -70,24 +75,20 @@ export const createGithubKit = async (token: string) => {
         repo: repo,
       });
 
-      const fragments =
+      const fragments: ElementaryFragment[] =
         result?.repository?.object?.entries?.map((e: any) => ({
           handle: e.name.replace(".md", ""),
           content: e.object.text,
         })) || [];
 
-      return fragments;
-    };
+      lastFilesHash = Object.assign(
+        {},
+        ...fragments.map(({ handle, content }) => ({
+          [handle]: simpleHash(content),
+        }))
+      );
 
-    const stageDelete = (handle: string) => {
-      hasStagedElements = true;
-      queue.toDelete?.push(handle);
-      if (autoSave) debouncedCommitStaged();
-    };
-    const stageUpsert = (fragment: ElementaryFragment) => {
-      hasStagedElements = true;
-      queue.toUpsert?.push(fragment);
-      if (autoSave) debouncedCommitStaged();
+      return fragments;
     };
 
     const commit = async (
@@ -100,71 +101,124 @@ export const createGithubKit = async (token: string) => {
       },
       message = ""
     ) => {
-      if (!toDelete.length && !toUpsert.length) return;
-      if (!ok) return;
-      const commonParams = { owner: owner, repo: repo };
+      try {
+        if (!toDelete.length && !toUpsert.length) return;
+        if (!ok) return;
+        const commonParams = { owner: owner, repo: repo };
 
-      const toDeletePath = toDelete.map((handle) => `fragments/${handle}.md`);
-      const toUpsertByPath = keyBy(
-        toUpsert.map((f) => ({
-          path: `fragments/${f.handle}.md`,
-          content: f.content,
-          mode: "100644",
-          type: "blob",
-        })),
-        "path"
+        const toDeletePath = uniq(
+          toDelete.map((handle) => `fragments/${handle}.md`)
+        );
+        const toUpsertByPath = keyBy(
+          toUpsert.map((f) => ({
+            path: `fragments/${f.handle}.md`,
+            content: f.content,
+            mode: "100644",
+            type: "blob",
+          })),
+          "path"
+        );
+
+        //if (!lastCommit) {
+        const headQuery = await ok.git.getRef({
+          ...commonParams,
+          ref: "heads/main",
+        });
+        const lastCommitQuery = await ok.git.getCommit({
+          ...commonParams,
+          commit_sha: headQuery.data.object.sha,
+        });
+        lastCommit = lastCommitQuery.data;
+        //}
+
+        //if (!lastTree) {
+        const lastTreeQuery = await ok.git.getTree({
+          ...commonParams,
+          tree_sha: lastCommit.tree.sha,
+          recursive: "true",
+        });
+        lastTree = lastTreeQuery.data;
+        //}
+
+        const lastTreeEntryFileList = lastTree.tree.filter(
+          (e: any) => e.type === "blob"
+        );
+
+        const lastTreeEntryFileListByPath = keyBy(
+          lastTreeEntryFileList,
+          "path"
+        );
+        const filesWithoutDeletesByPath = omit(
+          lastTreeEntryFileListByPath,
+          toDeletePath
+        );
+        const withUpsertsByPath = {
+          ...filesWithoutDeletesByPath,
+          ...toUpsertByPath,
+        };
+
+        const newTree = await ok.git.createTree({
+          ...commonParams,
+          tree: Object.values(withUpsertsByPath),
+        });
+
+        const newCommit = await ok.git.createCommit({
+          ...commonParams,
+          tree: newTree.data.sha,
+          message,
+          parents: [lastCommit.sha],
+        });
+
+        await ok.git.updateRef({
+          ...commonParams,
+          ref: "heads/main",
+          sha: newCommit.data.sha,
+        });
+
+        lastTree = newTree.data;
+        lastCommit = newCommit.data;
+
+        const newFilesHash = Object.assign(
+          {},
+          ...toUpsert.map(({ handle, content }) => ({
+            [handle]: simpleHash(content),
+          }))
+        );
+
+        lastFilesHash = { ...lastFilesHash, ...newFilesHash };
+      } catch (err) {
+        lastTree = undefined;
+        lastCommit = undefined;
+
+        console.log(err);
+        throw err;
+      }
+    };
+
+    const stageChanges = async (
+      files: ElementaryFragment[],
+      message?: string
+    ) => {
+      const changes = files.filter(
+        ({ handle, content }) =>
+          !lastFilesHash[handle] ||
+          lastFilesHash[handle] !== simpleHash(content)
       );
+      const handles = files.map((f) => f.handle);
 
-      const head = await ok.git.getRef({
-        ...commonParams,
-        ref: "heads/main",
-      });
-      const lastCommit = await ok.git.getCommit({
-        ...commonParams,
-        commit_sha: head.data.object.sha,
-      });
-      const lastTree = await ok.git.getTree({
-        ...commonParams,
-        tree_sha: lastCommit.data.tree.sha,
-        recursive: "true",
-      });
+      const deletes = Object.keys(omit(lastFilesHash, handles));
 
-      const lastTreeEntryFileList = lastTree.data.tree.filter(
-        (e) => e.type === "blob"
-      );
+      console.log("Staging change :", changes?.length + deletes.length);
 
-      const lastTreeEntryFileListByPath = keyBy(lastTreeEntryFileList, "path");
-      const filesWithoutDeletesByPath = omit(
-        lastTreeEntryFileListByPath,
-        toDeletePath
-      );
-      const withUpsertsByPath = {
-        ...filesWithoutDeletesByPath,
-        ...toUpsertByPath,
-      };
+      queue.toUpsert = changes;
+      queue.toDelete = deletes;
 
-      const newTree = await ok.git.createTree({
-        ...commonParams,
-        tree: Object.values(withUpsertsByPath),
-      });
-
-      const newCommit = await ok.git.createCommit({
-        ...commonParams,
-        tree: newTree.data.sha,
-        message,
-        parents: [lastCommit.data.sha],
-      });
-
-      await ok.git.updateRef({
-        ...commonParams,
-        ref: "heads/main",
-        sha: newCommit.data.sha,
-      });
+      debouncedCommitStaged(message);
     };
 
     const commitStaged = async (message?: string) => {
       if (isCommiting) return;
-      if (!hasStagedElements) return;
+      if (!queue.toUpsert.length && !queue.toDelete.length) return;
 
       console.log("Commiting staged changes");
 
@@ -189,11 +243,11 @@ export const createGithubKit = async (token: string) => {
     return {
       getAllFragments,
       isCommiting,
-      stageDelete,
-      stageUpsert,
       commitStaged,
       hasStagedElements,
+      stageChanges,
       commit,
+      lastFilesHash,
     };
   };
 

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce/lib";
 import { FragmentProps } from "./index";
 import { defaultFragment } from "libs/engine";
+import { generateHandle } from "utils";
 export const useLogic = ({
   onHandleChange: onHandleChangeParent,
   autoFocus,
@@ -25,13 +26,7 @@ export const useLogic = ({
   const [c, setC] = useState(0);
   const [w, setW] = useState(0);
 
-  const [handle, setHandle] = useState(
-    fragment?.handle ||
-      getHumanId({
-        separator: "-",
-        capitalize: false,
-      })
-  );
+  const [handle, setHandle] = useState(fragment?.handle || generateHandle());
 
   const [content, setContent] = useState<string>(
     fragment?.content || initialContent || ""

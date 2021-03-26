@@ -31,17 +31,21 @@ export const useAuth = () => {
       });
     } else if (urlParams.has("code")) {
       const code = urlParams.get("code");
-      // TOTO:parametrize
-      const { access_token } = await fetch(
+
+      // remove code right away
+      var uri = window.location.href;
+      var clean_uri = uri.split("?")[0];
+      window.history.replaceState({}, document.title, clean_uri);
+
+      // get access_token
+      const { access_token, refresh_token } = await fetch(
         `${process.env.REACT_APP_API_URL}/auth?code=${code}`
       ).then((r) => r.json());
 
       if (!access_token) return;
 
-      var uri = window.location.href;
-      var clean_uri = uri.split("?")[0];
-      window.history.replaceState({}, document.title, clean_uri);
       localStorage.setItem("token", access_token);
+      localStorage.setItem("refresh_token", refresh_token);
 
       const user = await getUser(access_token);
 

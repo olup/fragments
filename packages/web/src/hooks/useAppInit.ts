@@ -1,4 +1,4 @@
-import { build, FragmentFromFile } from "libs/engine";
+import { build, FragmentFromFile, populateChildren } from "libs/engine";
 import { ElementaryFragment } from "libs/github";
 import { useEffect } from "react";
 import { useAppStore } from "./appStore";
@@ -30,13 +30,17 @@ export const useAppInit = () => {
   }, [github, repo]);
 
   useEffect(() => {
+    console.time("app-init");
     if (githubRepo) {
       githubRepo
         .getAllFragments()
         .then((fragments: ElementaryFragment[]) =>
-          reset(build(fragments.map((f) => FragmentFromFile(f))))
+          reset(
+            build(populateChildren(fragments.map((f) => FragmentFromFile(f))))
+          )
         );
     }
+    console.timeEnd("app-init");
   }, [githubRepo]);
 
   useEffect(() => {
