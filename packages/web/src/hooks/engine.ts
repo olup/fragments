@@ -1,6 +1,7 @@
 import Fuse from "fuse.js";
 import { build, Engine, exportToFiles, Fragment } from "libs/engine";
 import { cloneDeep, pick } from "lodash";
+import { VoidExpression } from "typescript";
 import create from "zustand";
 import { devtools } from "zustand/middleware";
 import { Repo } from "../libs/github";
@@ -16,6 +17,7 @@ export const useEngine = create<{
     updateHandle: (oldHandle: string, newHandle: string) => Promise<Boolean>;
     deleteFragment: (handle: string) => Promise<boolean>;
     searchFragment: (searchString: string) => Fragment[];
+    commit: () => void;
     getTag: (
       name: string
     ) => {
@@ -116,6 +118,9 @@ export const useEngine = create<{
       },
       getTag: (name) => get().engine.tags[name],
       setRepo: (repo) => set({ repo }),
+      commit: () => {
+        get().repo?.commitStaged();
+      },
     },
   }))
 );

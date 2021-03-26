@@ -56,7 +56,6 @@ export const createGithubKit = async (token: string) => {
 
   const initRepo = (repo: string, owner: string, autoSave?: boolean) => {
     let isCommiting = false;
-    let hasStagedElements = false;
     let lastCommit: any | undefined;
     let lastTree: any | undefined;
     let lastFilesHash: Record<string, string> = {};
@@ -119,17 +118,17 @@ export const createGithubKit = async (token: string) => {
           "path"
         );
 
-        //if (!lastCommit) {
-        const headQuery = await ok.git.getRef({
-          ...commonParams,
-          ref: "heads/main",
-        });
-        const lastCommitQuery = await ok.git.getCommit({
-          ...commonParams,
-          commit_sha: headQuery.data.object.sha,
-        });
-        lastCommit = lastCommitQuery.data;
-        //}
+        if (!lastCommit) {
+          const headQuery = await ok.git.getRef({
+            ...commonParams,
+            ref: "heads/main",
+          });
+          const lastCommitQuery = await ok.git.getCommit({
+            ...commonParams,
+            commit_sha: headQuery.data.object.sha,
+          });
+          lastCommit = lastCommitQuery.data;
+        }
 
         //if (!lastTree) {
         const lastTreeQuery = await ok.git.getTree({
@@ -213,7 +212,7 @@ export const createGithubKit = async (token: string) => {
       queue.toUpsert = changes;
       queue.toDelete = deletes;
 
-      debouncedCommitStaged(message);
+      // debouncedCommitStaged(message);
     };
 
     const commitStaged = async (message?: string) => {
@@ -229,13 +228,13 @@ export const createGithubKit = async (token: string) => {
       console.log("Commited");
 
       isCommiting = false;
+
       // reset queue
       queue.toDelete = [];
       queue.toUpsert = [];
-      hasStagedElements = false;
     };
 
-    const debouncedCommitStaged = debounce(commitStaged, 1000 * 5, {
+    const debouncedCommitStaged = debounce(commitStaged, 1000 * 2, {
       leading: false,
       trailing: true,
     });
@@ -244,7 +243,6 @@ export const createGithubKit = async (token: string) => {
       getAllFragments,
       isCommiting,
       commitStaged,
-      hasStagedElements,
       stageChanges,
       commit,
       lastFilesHash,
