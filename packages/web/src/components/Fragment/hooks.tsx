@@ -63,7 +63,7 @@ export const useLogic = ({
     if (content === newContent) return;
     setContent(newContent);
     setIsDirty(true);
-    if (autoSave) debouncedSave();
+    debouncedSave();
   }, []);
 
   const onHandleChange = (newHandle: string) => {

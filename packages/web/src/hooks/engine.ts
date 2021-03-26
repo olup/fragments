@@ -50,7 +50,6 @@ export const useEngine = create<{
 
       updateFragment: async (fragment: Fragment) => {
         const fragments: Record<string, Fragment> = get().engine.fragments;
-
         get().actions.reset(
           build(Object.values({ ...fragments, [fragment.handle]: fragment }))
         );
