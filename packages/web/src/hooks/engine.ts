@@ -54,7 +54,6 @@ export const useEngine = create<{
         get().actions.reset(
           build(Object.values({ ...fragments, [fragment.handle]: fragment }))
         );
-        get().repo?.stageChanges(exportToFiles(get().engine));
         return get().engine.fragments[fragment.handle];
       },
 
@@ -84,10 +83,7 @@ export const useEngine = create<{
             return fragment;
           }
         );
-
         get().actions.reset(build(updatedFragments));
-        get().repo?.stageChanges(exportToFiles(get().engine));
-
         return true;
       },
 
@@ -111,7 +107,6 @@ export const useEngine = create<{
               )
             )
           );
-          get().repo?.stageChanges(exportToFiles(get().engine));
         }
 
         return true;
@@ -119,6 +114,7 @@ export const useEngine = create<{
       getTag: (name) => get().engine.tags[name],
       setRepo: (repo) => set({ repo }),
       commit: () => {
+        get().repo?.stageChanges(exportToFiles(get().engine));
         get().repo?.commitStaged();
       },
     },
