@@ -1,25 +1,17 @@
 import { Box } from "@chakra-ui/layout";
 import { Icon, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { Editor } from "components/Editor";
-import { Preview } from "components/Preview";
 import { useEngine } from "hooks/engine";
 import { defaultFragment, Fragment as FragmentType } from "libs/engine";
 import React, { FC } from "react";
-import { HiDotsHorizontal, HiLink, HiOutlineLink } from "react-icons/hi";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { Expander, Flex } from "../Layout";
-import { Link } from "../Link";
-import { useLogic } from "./hooks";
-import {
-  BackLinksLine,
-  FragmentStyled,
-  HandleInput,
-  HideOut,
-  Info,
-} from "./styles";
 import { BiDotsHorizontal } from "react-icons/bi";
-import { graphqlSync } from "graphql";
+import { HiLink } from "react-icons/hi";
+import { TiFlowChildren } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
 import { generateHandle } from "utils";
+import { Expander, Flex } from "../Layout";
+import { useLogic } from "./hooks";
+import { FragmentStyled, HandleInput, HideOut } from "./styles";
 
 export type FragmentProps = {
   fragment?: FragmentType;
@@ -59,12 +51,13 @@ export const Fragment: FC<FragmentProps> = (props) => {
     hasBackLinks,
     handleBlur,
     showCount,
+    onDelete,
     setShowCount,
     c,
     w,
   } = useLogic({ ...props, fragment });
 
-  const { autoFocus, initialContent, onDelete } = props;
+  const { autoFocus, initialContent } = props;
   const linkedByCount = useEngine(
     (s) => s.actions.getFragments(fragment?.linkedBy || []).length
   );
@@ -82,9 +75,16 @@ export const Fragment: FC<FragmentProps> = (props) => {
                 onBlur={() => onChangeHandle()}
                 onClick={goToHandlePage}
               />
+              {/* How many back links ? */}
               {linkedByCount > 0 && (
                 <Flex align="center" ml={5} color="#ccc">
                   <Icon as={HiLink} mr={1} /> {linkedByCount}
+                </Flex>
+              )}
+              {/*  How many children ? */}
+              {fragment?.children?.length && (
+                <Flex align="center" ml={5} color="#ccc">
+                  <Icon as={TiFlowChildren} mr={1} /> {fragment.children.length}
                 </Flex>
               )}
               <Expander />
@@ -107,13 +107,13 @@ export const Fragment: FC<FragmentProps> = (props) => {
                   <MenuItem onClick={() => setShowCount(!showCount)}>
                     {showCount ? "Hide" : "Show"} count
                   </MenuItem>
-                  <MenuItem onClick={() => onDelete?.(handle)}>Delete</MenuItem>
+                  <MenuItem onClick={() => onDelete()}>Delete</MenuItem>
                 </MenuList>
               </Menu>
             </Flex>
           </HideOut>
           <Editor
-            key={fragment?.content}
+            // key={fragment?.content}
             autoFocus={autoFocus}
             onChange={onContentChange}
             initialValue={fragment?.content || initialContent || ""}

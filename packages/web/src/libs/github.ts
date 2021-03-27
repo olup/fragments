@@ -184,7 +184,7 @@ export const createGithubKit = async (token: string) => {
           }))
         );
 
-        lastFilesHash = { ...lastFilesHash, ...newFilesHash };
+        lastFilesHash = { ...omit(lastFilesHash, toDelete), ...newFilesHash };
       } catch (err) {
         lastTree = undefined;
         lastCommit = undefined;

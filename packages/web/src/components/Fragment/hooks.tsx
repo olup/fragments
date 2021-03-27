@@ -39,6 +39,7 @@ export const useLogic = ({
 
   const saveFragment = useEngine((s) => s.actions.updateFragment);
   const updateHandle = useEngine((s) => s.actions.updateHandle);
+  const deleteFragment = useEngine((s) => s.actions.deleteFragment);
 
   const onSave = useCallback(async () => {
     if (!content || !isDirty) return;
@@ -101,6 +102,10 @@ export const useLogic = ({
     onSave();
   });
 
+  const onDelete = () => {
+    deleteFragment(handle);
+  };
+
   return {
     setHandle,
     onSave,
@@ -111,6 +116,7 @@ export const useLogic = ({
     setUseSpellCheck,
     handleBlur,
     setShowCount,
+    onDelete,
     showCount,
     hasBackLinks,
     useSpellCheck,

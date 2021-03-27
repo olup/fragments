@@ -1,4 +1,4 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 import { GlobalStyles } from "GlobalStyles";
 import { useAppStore } from "hooks/appStore";
 import { useAppInit } from "hooks/useAppInit";
@@ -12,6 +12,7 @@ const AppWithContext = () => {
   return (
     <ChakraProvider theme={theme}>
       <GlobalStyles />
+      <CSSReset />
       <MainRouter />
     </ChakraProvider>
   );

@@ -101,9 +101,13 @@ export const useEngine = create<{
         if (fragment) {
           get().actions.reset(
             build(
-              Object.values(get().engine.fragments).filter(
-                (f) => f.handle !== handle
-              )
+              Object.values(get().engine.fragments)
+                .map((f) => {
+                  if (f.children?.includes(handle))
+                    f.children = f.children.filter((h) => h !== handle);
+                  return f;
+                })
+                .filter((f) => f.handle !== handle)
             )
           );
         }
