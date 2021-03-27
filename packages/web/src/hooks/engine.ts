@@ -116,9 +116,9 @@ export const useEngine = create<{
       },
       getTag: (name) => get().engine.tags[name],
       setRepo: (repo) => set({ repo }),
-      commit: () => {
-        get().repo?.stageChanges(exportToFiles(get().engine));
-        get().repo?.commitStaged();
+      commit: async () => {
+        await get().repo?.stageChanges(exportToFiles(get().engine));
+        await get().repo?.commitStaged();
       },
     },
   }))

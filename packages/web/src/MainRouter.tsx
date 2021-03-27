@@ -1,5 +1,6 @@
 import { Body, Container, Main } from "components/Layout";
 import { OptionBar } from "components/OptionBar";
+import { SaveButton } from "components/SaveButton";
 import { Side } from "components/Side";
 import { useAppStore } from "hooks/appStore";
 import { useAuth } from "hooks/useAuth";
@@ -43,7 +44,8 @@ export const MainRouter = () => {
   return (
     <Router>
       <Main>
-        <OptionBar />
+        {/* <OptionBar /> */}
+        <SaveButton />
         <Side />
         <Body>
           <Container>

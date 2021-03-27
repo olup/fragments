@@ -1,13 +1,11 @@
-import { useEngine } from "hooks/engine";
-import getHumanId from "human-id";
 import { format } from "date-fns";
+import { useEngine } from "hooks/engine";
+import { defaultFragment } from "libs/engine";
 import { useCallback, useEffect, useState } from "react";
-import { useHotkeys } from "react-hotkeys-hook";
 import { useNavigate } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce/lib";
-import { FragmentProps } from "./index";
-import { defaultFragment } from "libs/engine";
 import { generateHandle } from "utils";
+import { FragmentProps } from "./index";
 export const useLogic = ({
   onHandleChange: onHandleChangeParent,
   autoFocus,
@@ -96,11 +94,6 @@ export const useLogic = ({
     if (saveOnBlur) await onSave();
     onOutsideClick?.();
   };
-
-  useHotkeys("ctrl+s", (e) => {
-    e.preventDefault();
-    onSave();
-  });
 
   const onDelete = () => {
     deleteFragment(handle);
