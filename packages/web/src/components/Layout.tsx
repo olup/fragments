@@ -8,8 +8,7 @@ export const Expander = styled.div`
 `;
 
 export const Main: FC<FlexProps> = ({ ...props }) => {
-  const bg = useColorModeValue("#f9f9f9", "#222");
-  return <Flex backgroundColor={bg} p={5} minHeight="100vh" {...props} />;
+  return <Flex backgroundColor={"pageBg"} p={5} minHeight="100vh" {...props} />;
 };
 
 // styled(Box)`

@@ -11,8 +11,7 @@ export const Info = styled(Flex)`
 `;
 export const HideOut = styled.div``;
 export const FragmentStyled: FC<BoxProps> = ({ ...props }) => {
-  const bg = useColorModeValue("white", "#333");
-  return <Box background={bg} p={5} {...props} />;
+  return <Box background="fragmentBg" color="fragmentText" p={5} {...props} />;
 };
 // styled(Box)`
 //   padding: 20px 30px;

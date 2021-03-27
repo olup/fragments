@@ -41,7 +41,7 @@ const Option = styled.div`
   user-select: none;
 `;
 export const OptionBar: FC = () => {
-  const { set, useDarkMode, useTypewriterMode } = useAppStore((s) => s);
+  const { set, useTypewriterMode } = useAppStore((s) => s);
   const commit = useEngine((s) => s.actions.commit);
   const { colorMode, toggleColorMode } = useColorMode();
   return (

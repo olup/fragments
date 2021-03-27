@@ -1,26 +1,39 @@
-import { ChakraProvider, CSSReset } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  ColorModeProvider,
+  CSSReset,
+  ThemeProvider,
+  useColorMode,
+  useColorModePreference,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { GlobalStyles } from "GlobalStyles";
 import { useAppStore } from "hooks/appStore";
 import { useAppInit } from "hooks/useAppInit";
 import { GithubProvider } from "hooks/useGithub";
-import { theme } from "theme";
+import { darkTheme, theme } from "theme";
 import { MainRouter } from "./MainRouter";
 
 const AppWithContext = () => {
   useAppInit();
-  const useDarkMode = useAppStore((s) => s.useDarkMode);
+  const { colorMode } = useColorMode();
+  const modedTheme = { ...theme, ...(colorMode === "dark" ? darkTheme : {}) };
   return (
-    <ChakraProvider theme={theme}>
+    <ThemeProvider theme={modedTheme}>
       <GlobalStyles />
       <CSSReset />
       <MainRouter />
-    </ChakraProvider>
+    </ThemeProvider>
   );
 };
 
 const App = () => (
   <GithubProvider>
-    <AppWithContext />
+    <ColorModeProvider
+      options={{ initialColorMode: "light", useSystemColorMode: false }}
+    >
+      <AppWithContext />
+    </ColorModeProvider>
   </GithubProvider>
 );
 

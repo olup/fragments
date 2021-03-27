@@ -1,18 +1,10 @@
 import { extendTheme } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
-export const lightTheme = {
+export const darkTheme = {
   colors: {
-    textColor: "#222",
-    fragmentBackgroundColor: "#fff",
-    pageBackgroundColor: "#f3f3f3",
-  },
-};
-
-export const darkTheme: typeof lightTheme = {
-  colors: {
-    textColor: "#fff",
-    fragmentBackgroundColor: "#272727",
-    pageBackgroundColor: "#222",
+    pageBg: "#222",
+    fragmentBg: "#333",
+    fragmentText: "white",
   },
 };
 
@@ -20,6 +12,12 @@ export const theme = extendTheme({
   fonts: {
     heading: "Inconsolata",
     body: "Inconsolata",
+  },
+
+  colors: {
+    pageBg: "#f9f9f9",
+    fragmentBg: "white",
+    fragmentText: "#222",
   },
 
   components: {

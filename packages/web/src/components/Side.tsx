@@ -48,7 +48,7 @@ const Inside = styled.div`
   box-sizing: border-box;
 `;
 
-const FixLink = styled.div<{ isSideOpen: boolean }>`
+const FixLink = styled(Box)<{ isSideOpen: boolean }>`
   position: fixed;
   display: inline-block;
   font-size: 20px;
@@ -135,7 +135,11 @@ export const Side: FC = () => {
         style={{ position: "relative" }}
       ></SideStyled>
 
-      <FixLink onClick={handleToggleShow} isSideOpen={isVisible}>
+      <FixLink
+        onClick={handleToggleShow}
+        isSideOpen={isVisible}
+        color="fragmentText"
+      >
         {isVisible ? <HiX /> : <HiMenu />}
       </FixLink>
       <SideStyled isVisible={isVisible}>
