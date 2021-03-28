@@ -39,8 +39,8 @@ export type Engine = {
 };
 
 export const defaultFragment = {
-  createdAt: format(new Date(), "yyyy-MM-dd"),
-  updatedAt: format(new Date(), "yyyy-MM-dd"),
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
   tags: [],
   linksTo: [],
   linkedBy: [],

@@ -107,7 +107,7 @@ export const TagPage = () => {
         initialContent={`\n#${tagName}`}
         placeholder={
           <Flex align="center">
-            <Icon as={MdCreate} mr={3} /> Add note to the list
+            <Icon as={MdCreate} mr={3} /> Add fragment to the tag list
           </Flex>
         }
       />

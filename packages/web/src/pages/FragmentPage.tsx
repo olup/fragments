@@ -40,6 +40,9 @@ export const FragmentPage = () => {
   const { handle } = useParams();
 
   const fragment = useEngine((s) => s.engine.fragments[handle]);
+  const parent = useEngine((s) =>
+    Object.values(s.engine.fragments).find((f) => f.children?.includes(handle))
+  );
   const updateFragment = useEngine((s) => s.actions.updateFragment);
   const deleteFragment = useEngine((s) => s.actions.deleteFragment);
 
@@ -61,9 +64,14 @@ export const FragmentPage = () => {
   return (
     <>
       <Flex style={{ marginBottom: 20 }}>
-        <RouterLink to="/">
+        <Box as={RouterLink} to="/" mr={3}>
           <Link>Back home</Link>
-        </RouterLink>
+        </Box>
+        {parent && (
+          <Box as={RouterLink} to={`/handle/${parent.handle}`}>
+            <Link>Got to parent</Link>
+          </Box>
+        )}
       </Flex>
 
       <Box mb={5}>
@@ -92,6 +100,8 @@ export const FragmentPage = () => {
         onClick={() => handleAddChild()}
         cursor="pointer"
         fontWeight="bold"
+        color="fragmentText"
+        opacity={0.8}
       >
         <Icon as={HiPlus} mr={2} fontSize={20} />
         Add child fragment

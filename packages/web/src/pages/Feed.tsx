@@ -9,9 +9,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 export const Feed = () => {
   const fragmentsByHandle = useEngine((s) => s.engine.fragments);
-  const fragments = reverse(
-    sortBy(Object.values(fragmentsByHandle), "createdAt")
-  );
+  const fragments = sortBy(Object.values(fragmentsByHandle), "createdAt");
 
   const starFragments = useEngine((s) =>
     s.actions.getFragments(s.engine.tags["star"]?.handles || [])

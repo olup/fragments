@@ -25,10 +25,12 @@ export const Body = styled(Box)`
   flex: 1;
   justify-content: center;
   display: flex;
+  max-width: 100%;
 `;
 
 export const Container = styled(Box)`
   width: 1000px;
+  max-width: 100%;
   padding-top: 100px;
 `;
 

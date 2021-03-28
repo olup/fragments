@@ -46,7 +46,7 @@ export const useLogic = ({
       ...(fragment || {}), // previous fragment, if exists
       handle,
       content,
-      updatedAt: format(new Date(), "yyyy-MM-dd"),
+      updatedAt: new Date().toISOString(),
     };
     const result = await saveFragment(newFragment);
 
@@ -99,6 +99,19 @@ export const useLogic = ({
     deleteFragment(handle);
   };
 
+  const parent = useEngine((s) =>
+    Object.values(s.engine.fragments).find((f) => f.children?.includes(handle))
+  );
+
+  const onDetachFromParent = () => {
+    if (!parent?.children) return;
+    const children = parent.children?.filter((h) => h !== handle);
+    saveFragment({
+      ...parent,
+      children,
+    });
+  };
+
   return {
     setHandle,
     onSave,
@@ -110,6 +123,8 @@ export const useLogic = ({
     handleBlur,
     setShowCount,
     onDelete,
+    onDetachFromParent,
+    parent,
     showCount,
     hasBackLinks,
     useSpellCheck,

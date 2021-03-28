@@ -22,7 +22,7 @@ export const SaveButton: FC = () => {
     setIsLoading(false);
   };
   return (
-    <Flex position="fixed" top={5} right={5}>
+    <Flex position="fixed" top={5} right={5} zIndex={100}>
       <Flex
         bg="#ddd"
         onClick={() => toggleColorMode()}
@@ -31,7 +31,6 @@ export const SaveButton: FC = () => {
         fontSize={20}
         align="center"
         justify="center"
-        zIndex={100}
         opacity={0.8}
         borderRadius={2}
         height="45px"

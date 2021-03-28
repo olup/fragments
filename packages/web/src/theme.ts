@@ -15,7 +15,7 @@ export const theme = extendTheme({
   },
 
   colors: {
-    pageBg: "#f9f9f9",
+    pageBg: "#eee",
     fragmentBg: "white",
     fragmentText: "#222",
   },

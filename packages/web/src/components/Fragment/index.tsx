@@ -52,6 +52,8 @@ export const Fragment: FC<FragmentProps> = (props) => {
     handleBlur,
     showCount,
     onDelete,
+    onDetachFromParent,
+    parent,
     setShowCount,
     c,
     w,
@@ -107,7 +109,12 @@ export const Fragment: FC<FragmentProps> = (props) => {
                   <MenuItem onClick={() => setShowCount(!showCount)}>
                     {showCount ? "Hide" : "Show"} count
                   </MenuItem>
-                  <MenuItem onClick={() => onDelete()}>Delete</MenuItem>
+                  {parent && (
+                    <MenuItem onClick={onDetachFromParent}>
+                      Detach from parent
+                    </MenuItem>
+                  )}
+                  <MenuItem onClick={onDelete}>Delete</MenuItem>
                 </MenuList>
               </Menu>
             </Flex>

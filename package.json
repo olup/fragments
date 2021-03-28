@@ -10,7 +10,7 @@
     "api": "yarn workspace api",
     "web": "yarn workspace web",
     "dev": "concurrently \"yarn api dev\" \"yarn web start\"",
-    "netlify": "netlify dev",
+    "dev:netlify": "netlify dev",
     "build": "yarn web build && yarn api build"
   },
   "dependencies": {
