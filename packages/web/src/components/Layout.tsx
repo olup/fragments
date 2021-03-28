@@ -8,7 +8,9 @@ export const Expander = styled.div`
 `;
 
 export const Main: FC<FlexProps> = ({ ...props }) => {
-  return <Flex backgroundColor={"pageBg"} p={5} minHeight="100vh" {...props} />;
+  return (
+    <Flex backgroundColor={"pageBg"} p={[0, 5]} minHeight="100vh" {...props} />
+  );
 };
 
 // styled(Box)`

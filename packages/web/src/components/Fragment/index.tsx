@@ -63,6 +63,7 @@ export const Fragment: FC<FragmentProps> = (props) => {
   const linkedByCount = useEngine(
     (s) => s.actions.getFragments(fragment?.linkedBy || []).length
   );
+  const childrenCount = fragment.children?.length || 0;
 
   return (
     <Box w="100%">
@@ -84,9 +85,9 @@ export const Fragment: FC<FragmentProps> = (props) => {
                 </Flex>
               )}
               {/*  How many children ? */}
-              {fragment?.children?.length && (
+              {childrenCount > 0 && (
                 <Flex align="center" ml={5} color="#ccc">
-                  <Icon as={TiFlowChildren} mr={1} /> {fragment.children.length}
+                  <Icon as={TiFlowChildren} mr={1} /> {childrenCount}
                 </Flex>
               )}
               <Expander />

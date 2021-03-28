@@ -22,19 +22,19 @@ export const SaveButton: FC = () => {
     setIsLoading(false);
   };
   return (
-    <Flex position="fixed" top={5} right={5} zIndex={100}>
+    <Flex position="fixed" top={[2, 5]} right={[2, 5]} zIndex={100}>
       <Flex
         bg="#ddd"
         onClick={() => toggleColorMode()}
         cursor="pointer"
         padding={3}
-        fontSize={20}
         align="center"
         justify="center"
         opacity={0.8}
         borderRadius={2}
-        height="45px"
-        width="45px"
+        fontSize={[15, 20]}
+        height={["30px", "45px"]}
+        width={["30px", "45px"]}
         mr={3}
       >
         {colorMode === "light" && <Icon as={WiMoonAltFull} opacity={0.5} />}
@@ -45,14 +45,14 @@ export const SaveButton: FC = () => {
         onClick={onCommit}
         cursor="pointer"
         padding={3}
-        fontSize={20}
         align="center"
         justify="center"
         zIndex={100}
         opacity={0.8}
         borderRadius={2}
-        height="45px"
-        width="45px"
+        fontSize={[15, 20]}
+        height={["30px", "45px"]}
+        width={["30px", "45px"]}
       >
         {!isLoading && <Icon as={MdSave} opacity={0.5} />}
         {isLoading && <Spinner opacity={0.5} size="sm" />}
