@@ -18,9 +18,8 @@ const Header = styled.div`
   padding: 20px 0;
 `;
 
-const HiddenHeader = styled.div`
+const HiddenHeader = styled(Box)`
   // width: 100%;
-  background-color: #f9f9f9;
   top: -150px;
   position: fixed;
   z-index: 10;
@@ -45,11 +44,14 @@ export const TagPage = () => {
 
   return (
     <Box position="relative">
-      <HiddenHeader className={isSticky ? "sticky" : ""}>
+      <HiddenHeader
+        className={isSticky ? "sticky" : ""}
+        backgroundColor="pageBg"
+      >
         <Box w={1000}>
           <Header>
             <RouterLink to="/">
-              <Link>Back home</Link>
+              <Link color="fragmentText">Back home</Link>
             </RouterLink>
             <Flex mt={2} align="center" color="#bbb" fontSize={25}>
               <HiHashtag /> {tagName}
