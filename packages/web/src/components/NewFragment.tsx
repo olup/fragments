@@ -25,11 +25,13 @@ const NewBlock: FC<BoxProps> = (props) => {
 export const NewFragment: FC<{
   onOutsideClick?: () => any;
   placeholder?: ReactNode;
+  autoSave?: boolean;
   initialContent?: string;
 }> = ({
   onOutsideClick,
   placeholder = "What's on your mind ?",
   initialContent,
+  autoSave = true,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const handleBlur = () => {
@@ -48,6 +50,7 @@ export const NewFragment: FC<{
         onDelete={() => setIsEditing(false)}
         initialContent={initialContent}
         saveOnBlur
+        autoSave={autoSave}
         onBlur={handleBlur}
       />
     );

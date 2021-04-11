@@ -12,7 +12,7 @@ export const useLogic = ({
   initialContent,
   fragment,
   saveOnBlur,
-  autoSave,
+  autoSave = true,
   onBlur: onOutsideClick,
 }: FragmentProps) => {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ export const useLogic = ({
     if (content === newContent) return;
     setContent(newContent);
     setIsDirty(true);
-    debouncedSave();
+    if (autoSave) debouncedSave();
   }, []);
 
   const onHandleChange = (newHandle: string) => {

@@ -24,7 +24,7 @@ const HiddenHeader = styled(Box)`
   position: fixed;
   z-index: 10;
   width: 100%;
-  transition: 0.3s;
+  transition: top 0.3s;
   &.sticky {
     top: 0;
   }
@@ -62,7 +62,7 @@ export const TagPage = () => {
 
       <Header>
         <RouterLink to="/">
-          <Link>Back home</Link>
+          <Link color="fragmentText">Back home</Link>
         </RouterLink>
         <Flex
           mt={2}
@@ -107,6 +107,7 @@ export const TagPage = () => {
 
       <NewFragment
         initialContent={`\n#${tagName}`}
+        autoSave={false}
         placeholder={
           <Flex align="center">
             <Icon as={MdCreate} mr={3} /> Add fragment to the tag list

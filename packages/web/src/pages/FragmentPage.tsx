@@ -65,7 +65,7 @@ export const FragmentPage = () => {
     <>
       <Flex style={{ marginBottom: 20 }}>
         <Box as={RouterLink} to="/" mr={3}>
-          <Link>Back home</Link>
+          <Link color="fragmentText">Back home</Link>
         </Box>
         {parent && (
           <Box as={RouterLink} to={`/handle/${parent.handle}`}>
